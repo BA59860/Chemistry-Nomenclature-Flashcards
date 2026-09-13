@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Chemistry Nomenclature Flashcards</title>
+<style>
+  :root{
+    --bg:#0d1117;
+    --panel:#161b22;
+    --panel2:#1f2630;
+    --text:#f5f7fb;
+    --muted:#aeb6c5;
+    --accent:#ff922e;
+    --accent2:#b678ff;
+    --line:#30384a;
+  }
+
+  *{box-sizing:border-box}
+
+  body{
+    margin:0;
+    min-height:100vh;
+    font-family:Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    color:var(--text);
+    background:
+      radial-gradient(circle at 20% 20%, rgba(122,162,255,.12), transparent 28%),
+      radial-gradient(circle at 80% 80%, rgba(168,121,255,.10), transparent 30%),
+      linear-gradient(135deg,#0b0f14,#111722 55%,#0b0f14);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:24px;
+  }
+
+  .app{
+    width:min(1080px,96vw);
+    min-height:min(820px,94vh);
+    display:grid;
+    grid-template-rows:auto auto auto 1fr auto;
+    gap:16px;
+  }
+
+  header{
+    display:flex;
+    align-items:flex-end;
+    justify-content:space-between;
+    gap:18px;
+  }
+
+  h1{
+    margin:0;
+    font-size:clamp(30px,5vw,54px);
+    line-height:.95;
+    letter-spacing:.02em;
+  }
+
+  .sub{
+    margin-top:8px;
+    color:var(--muted);
+    font-weight:700;
+    letter-spacing:.08em;
+    font-size:13px;
+  }
+
+  .timerBox{
+    text-align:right;
+    min-width:145px;
+  }
+
+  #timer{
+    font-variant-numeric:tabular-nums;
+    font-size:36px;
+    font-weight:900;
+  }
+
+  .timerLabel{
+    color:var(--muted);
+    font-size:12px;
+    text-transform:uppercase;
+    letter-spacing:.14em;
+  }
+
+  .toolbar{
+    display:flex;
+    flex-wrap:wrap;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+    padding:12px 14px;
+    background:rgba(22,27,34,.9);
+    border:1px solid rgba(255,255,255,.08);
+    border-radius:18px;
+    box-shadow:0 10px 35px rgba(0,0,0,.25);
+  }
+
+  .status{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    color:var(--muted);
+    font-weight:700;
+  }
+
+  .pill{
+    padding:7px 10px;
+    border-radius:999px;
+    background:var(--panel2);
+    border:1px solid var(--line);
+    color:var(--text);
+    font-size:13px;
+  }
+
+  .actions{
+    display:flex;
+    gap:8px;
+    flex-wrap:wrap;
+  }
+
+  button{
+    border:1px solid var(--line);
+    background:#202733;
+    color:var(--text);
+    padding:10px 14px;
+    border-radius:12px;
+    font-weight:800;
+    cursor:pointer;
+    transition:.18s ease;
+  }
+
+  button:hover{
+    transform:translateY(-1px);
+    border-color:#4e5870;
+  }
+
+  .stage{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    min-height:0;
+  }
+
+  .card{
+    width:min(900px,94vw);
+    height:min(470px,58vh);
+    border-radius:30px;
+    border:1px solid rgba(255,255,255,.10);
+    box-shadow:0 28px 80px rgba(0,0,0,.45);
+    background:
+      linear-gradient(145deg,rgba(255,255,255,.03),rgba(255,255,255,0)),
+      linear-gradient(145deg,#171d27,#111720 68%,#141922);
+    display:grid;
+    place-items:center;
+    padding:36px;
+    cursor:pointer;
+    position:relative;
+    overflow:hidden;
+    transition:transform .15s ease, filter .15s ease;
+  }
+
+  .card:active{
+    transform:scale(.995);
+  }
+
+  .card::after{
+    content:"";
+    position:absolute;
+    left:0;
+    right:0;
+    bottom:0;
+    height:6px;
+    background:linear-gradient(90deg,var(--accent),var(--accent2));
+  }
+
+  .inner{
+    text-align:center;
+    width:100%;
+  }
+
+  .eyebrow{
+    color:var(--muted);
+    text-transform:uppercase;
+    letter-spacing:.16em;
+    font-size:13px;
+    font-weight:900;
+    margin-bottom:24px;
+  }
+
+  .prompt{
+    font-size:clamp(28px,5.5vw,70px);
+    line-height:1.15;
+    font-weight:950;
+    letter-spacing:-.035em;
+    text-shadow:0 8px 35px rgba(0,0,0,.3);
+    word-break:break-word;
+  }
+
+  .prompt.formula{
+    font-family:"SFMono-Regular",Consolas,"Liberation Mono",monospace;
+    letter-spacing:-.02em;
+  }
+
+
+  .prompt.formula .ion-stack{
+    display:inline-grid;
+    grid-template-rows:1fr 1fr;
+    align-items:center;
+    justify-items:center;
+    width:.72em;
+    margin-left:.015em;
+    vertical-align:middle;
+    line-height:.72;
+    transform:translateY(-.03em);
+  }
+
+  .prompt.formula .ion-stack sup,
+  .prompt.formula .ion-stack sub{
+    position:static;
+    font-size:.52em;
+    line-height:.72;
+    vertical-align:baseline;
+    margin:0;
+    padding:0;
+  }
+
+  .prompt.formula > sup{
+    font-size:.52em;
+    vertical-align:.72em;
+    line-height:0;
+    margin-left:.03em;
+  }
+
+  .hint{
+    margin-top:28px;
+    color:var(--muted);
+    font-size:15px;
+    font-weight:700;
+  }
+
+  .answerState{
+    box-shadow:
+      0 28px 80px rgba(0,0,0,.45),
+      inset 0 0 0 2px rgba(122,162,255,.18);
+  }
+
+  .flash{
+    animation:flash .28s ease;
+  }
+
+  @keyframes flash{
+    0%{filter:brightness(1)}
+    50%{filter:brightness(1.2)}
+    100%{filter:brightness(1)}
+  }
+
+  .timeup{
+    animation:pulse 1s ease-in-out infinite;
+  }
+
+  @keyframes pulse{
+    50%{transform:scale(1.04)}
+  }
+
+  footer{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:14px;
+    color:var(--muted);
+    font-size:13px;
+    font-weight:700;
+  }
+
+  .keys{
+    display:flex;
+    gap:8px;
+    flex-wrap:wrap;
+  }
+
+  kbd{
+    padding:4px 8px;
+    border-radius:7px;
+    border:1px solid #424b60;
+    background:#1c2230;
+    color:#fff;
+    box-shadow:inset 0 -2px 0 rgba(0,0,0,.35);
+    font-size:12px;
+  }
+
+  .progressWrap{
+    height:8px;
+    background:#171c25;
+    border-radius:999px;
+    overflow:hidden;
+    border:1px solid #252c3a;
+    min-width:180px;
+    flex:1;
+    max-width:340px;
+  }
+
+  #progress{
+    height:100%;
+    width:0%;
+    background:linear-gradient(90deg,var(--accent),var(--accent2));
+    transition:width .25s ease;
+  }
+
+  @media(max-width:700px){
+    .app{height:auto; min-height:90vh}
+    header{align-items:center}
+    .timerBox{min-width:auto}
+    #timer{font-size:28px}
+    .card{height:430px}
+    footer{flex-direction:column; align-items:flex-start}
+    .progressWrap{width:100%; max-width:none}
+  }
+
+  .firework-particle{
+    position:fixed;
+    width:10px;
+    height:10px;
+    border-radius:50%;
+    pointer-events:none;
+    z-index:99999;
+    transform:translate(-50%,-50%);
+    animation:fwBurst 900ms ease-out forwards;
+  }
+
+  @keyframes fwBurst{
+    from{
+      opacity:1;
+      transform:translate(-50%,-50%) translate(0,0) scale(1);
+    }
+    to{
+      opacity:0;
+      transform:translate(-50%,-50%) translate(var(--dx),var(--dy)) scale(.2);
+    }
+  }
+
+
+  .filters{display:flex;flex-wrap:wrap;gap:14px;align-items:end}
+  .filters label{display:grid;gap:6px;font-size:13px;color:var(--muted);font-weight:700}
+  select{max-width:100%;padding:10px;border:1px solid var(--line);border-radius:10px;background:var(--panel);color:var(--text);font:inherit}
+  .category-label{font-size:13px;color:#c998ff;margin-bottom:16px;font-weight:700}
+  .prompt.formula sub{font-size:.6em;line-height:0}
+  .prompt.formula .state{font-size:.48em;white-space:nowrap}
+  #fireworks{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:99999}
+  :focus-visible{outline:3px solid #ff922e;outline-offset:4px}
+  @media(max-width:700px){body{padding:14px}.card{padding:22px;height:390px}.status{flex-wrap:wrap}.filters label{width:100%}h1{font-size:32px}}
+</style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <div>
+      <h1>Chemistry Nomenclature Flashcards</h1>
+      <div class="sub">CHMY 041 • Names, formulas, and a little celebration</div>
+    </div>
+    <div class="timerBox">
+      <div class="timerLabel">Practice Timer</div>
+      <div id="timer">2:00</div>
+    </div>
+  </header>
+
+  <div class="filters">
+    <label>Practice category<select id="categorySelect"><option value="all">All categories</option></select></label>
+    <label>Card direction<select id="directionSelect"><option value="mixed">Mixed directions</option><option value="name">Name → formula</option><option value="formula">Formula → name</option></select></label>
+  </div>
+  <div class="toolbar">
+    <div class="status">
+      <span id="counter" class="pill">Card 1 of 9</span>
+      <span id="mode" class="pill">NAME → FORMULA</span>
+    </div>
+    <div class="actions">
+      <button id="prevBtn">← Previous</button>
+      <button id="shuffleBtn">Shuffle</button>
+      <button id="timerBtn">▶ Start 2:00</button>
+      <button id="nextBtn">Next →</button><button id="fireworksBtn">🎆 Celebrate</button>
+    </div>
+  </div>
+
+  <div class="stage">
+    <div id="card" class="card" role="button" tabindex="0" aria-label="Flashcard. Press spacebar to reveal the answer.">
+      <div class="inner" aria-live="polite">
+        <div id="eyebrow" class="eyebrow">Give the formula and charge</div>
+        <div id="cardText" class="prompt">nitrate</div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <div class="keys">
+      <span><kbd>Space</kbd> reveal</span>
+      <span><kbd>←</kbd> previous</span>
+      <span><kbd>→</kbd> next</span>
+      <span><kbd>R</kbd> reshuffle</span>
+      <span><kbd>T</kbd> timer</span>
+      <span><kbd>F</kbd> fireworks</span>
+    </div>
+    <div class="progressWrap" aria-label="Deck progress"><div id="progress"></div></div>
+    <div id="footerMsg">Ready</div>
+  </footer>
+</div>
+
+<canvas id="fireworks" aria-hidden="true"></canvas>
+<script>
+const ionDeck = [
+  {name:"phosphate", formula:"PO<span class='ion-stack'><sup>3−</sup><sub>4</sub></span>", direction:"name"},
+  {name:"sulfate",   formula:"SO<span class='ion-stack'><sup>2−</sup><sub>4</sub></span>", direction:"formula"},
+  {name:"sulfite",   formula:"SO<span class='ion-stack'><sup>2−</sup><sub>3</sub></span>", direction:"name"},
+  {name:"nitrate",   formula:"NO<span class='ion-stack'><sup>−</sup><sub>3</sub></span>",  direction:"formula"},
+  {name:"nitrite",   formula:"NO<span class='ion-stack'><sup>−</sup><sub>2</sub></span>",  direction:"name"},
+  {name:"hydroxide", formula:"OH<sup>−</sup>",   direction:"formula"},
+  {name:"carbonate", formula:"CO<span class='ion-stack'><sup>2−</sup><sub>3</sub></span>", direction:"name"},
+  {name:"ammonium",  formula:"NH<span class='ion-stack'><sup>+</sup><sub>4</sub></span>",  direction:"formula"},
+  {name:"cyanide",   formula:"CN<sup>−</sup>",   direction:"name"}
+].map(c => ({...c, category:"Polyatomic ions", note:"Include the ion charge."}));
+
+const groups = {"Type I \u2014 binary ionic": [["sodium chloride", "NaCl"], ["magnesium oxide", "MgO"], ["calcium bromide", "CaBr2"], ["aluminum sulfide", "Al2S3"], ["potassium nitride", "K3N"], ["magnesium chloride", "MgCl2"], ["calcium oxide", "CaO"], ["aluminum oxide", "Al2O3"]], "Type II \u2014 binary ionic": [["iron(II) chloride", "FeCl2"], ["iron(III) chloride", "FeCl3"], ["copper(I) oxide", "Cu2O"], ["copper(II) oxide", "CuO"], ["tin(II) fluoride", "SnF2"], ["tin(IV) chloride", "SnCl4"], ["lead(II) sulfide", "PbS"], ["iron(III) oxide", "Fe2O3"]], "Type I \u2014 with polyatomic ions": [["sodium nitrate", "NaNO3"], ["calcium nitrate", "Ca(NO3)2"], ["magnesium hydroxide", "Mg(OH)2"], ["aluminum sulfate", "Al2(SO4)3"], ["potassium carbonate", "K2CO3"], ["calcium phosphate", "Ca3(PO4)2"], ["sodium acetate", "NaC2H3O2"], ["barium sulfate", "BaSO4"]], "Type II \u2014 with polyatomic ions": [["iron(II) sulfate", "FeSO4"], ["iron(III) sulfate", "Fe2(SO4)3"], ["copper(II) nitrate", "Cu(NO3)2"], ["iron(III) hydroxide", "Fe(OH)3"], ["cobalt(II) carbonate", "CoCO3"], ["lead(II) nitrate", "Pb(NO3)2"], ["tin(IV) sulfate", "Sn(SO4)2"], ["iron(III) sulfite", "Fe2(SO3)3"]], "Binary molecular (covalent)": [["carbon monoxide", "CO"], ["carbon dioxide", "CO2"], ["dinitrogen monoxide", "N2O"], ["dinitrogen trioxide", "N2O3"], ["dinitrogen tetroxide", "N2O4"], ["dinitrogen pentoxide", "N2O5"], ["sulfur hexafluoride", "SF6"], ["phosphorus trichloride", "PCl3"]], "Binary acids": [["hydrofluoric acid", "HF(aq)"], ["hydrochloric acid", "HCl(aq)"], ["hydrobromic acid", "HBr(aq)"], ["hydroiodic acid", "HI(aq)"], ["hydrosulfuric acid", "H2S(aq)"]], "Oxyacids": [["nitric acid", "HNO3(aq)"], ["nitrous acid", "HNO2(aq)"], ["sulfuric acid", "H2SO4(aq)"], ["sulfurous acid", "H2SO3(aq)"], ["phosphoric acid", "H3PO4(aq)"], ["carbonic acid", "H2CO3(aq)"], ["hypochlorous acid", "HClO(aq)"], ["chlorous acid", "HClO2(aq)"], ["chloric acid", "HClO3(aq)"], ["perchloric acid", "HClO4(aq)"], ["acetic acid", "HC2H3O2(aq)"]], "Hydrates": [["copper(II) sulfate pentahydrate", "CuSO4\u00b75H2O"], ["cobalt(II) chloride hexahydrate", "CoCl2\u00b76H2O"], ["magnesium sulfate heptahydrate", "MgSO4\u00b77H2O"], ["sodium carbonate decahydrate", "Na2CO3\u00b710H2O"], ["calcium sulfate dihydrate", "CaSO4\u00b72H2O"], ["barium chloride dihydrate", "BaCl2\u00b72H2O"], ["iron(II) sulfate heptahydrate", "FeSO4\u00b77H2O"], ["lithium chloride monohydrate", "LiCl\u00b7H2O"]]};
+const categoryNotes = {"Type I \u2014 binary ionic": "Use the fixed metal charge; balance charges. No molecular prefixes.", "Type II \u2014 binary ionic": "The Roman numeral is the charge on one metal ion, not the atom count.", "Type I \u2014 with polyatomic ions": "Keep the polyatomic ion intact. Use parentheses for more than one copy.", "Type II \u2014 with polyatomic ions": "Balance the ion charges; use a Roman numeral for the metal charge.", "Binary molecular (covalent)": "Prefixes count atoms. Omit mono- on the first element; do not reduce subscripts.", "Binary acids": "Aqueous binary acid: hydro- + root + -ic acid. Include (aq).", "Oxyacids": "-ate \u2192 -ic acid; -ite \u2192 -ous acid. Keep hypo-/per-; do not add hydro-.", "Hydrates": "Name the ionic compound, then use a prefix + hydrate for the number of waters."};
+
+function formatFormula(raw){
+  return raw.split('·').map((part,i)=>{
+    const match = i ? part.match(/^(\d+)(.*)$/) : null;
+    const coefficient = match ? match[1] : '';
+    const formula = match ? match[2] : part;
+    return coefficient + formula.replace(/(\d+)/g,'<sub>$1</sub>').replace('(aq)','<span class="state">(aq)</span>');
+  }).join('·');
+}
+const baseDeck = [...ionDeck, ...Object.entries(groups).flatMap(([category, entries]) =>
+ entries.map(([name,raw],i)=>({name,raw,formula:formatFormula(raw),category,note:categoryNotes[category],direction:i%2?'formula':'name'})))];
+
+let deck = [...baseDeck];
+let index = 0;
+let showingAnswer = false;
+let seconds = 120;
+let timerHandle = null;
+
+const card = document.getElementById("card");
+const cardText = document.getElementById("cardText");
+const eyebrow = document.getElementById("eyebrow");
+const counter = document.getElementById("counter");
+const mode = document.getElementById("mode");
+const progress = document.getElementById("progress");
+const timer = document.getElementById("timer");
+const timerBtn = document.getElementById("timerBtn");
+const footerMsg = document.getElementById("footerMsg");
+
+function getPrompt(c){
+  return c.direction === "name" ? c.name : c.formula;
+}
+
+function getAnswer(c){
+  return c.direction === "name" ? c.formula : c.name;
+}
+
+function renderCard(){
+  const c = deck[index];
+  showingAnswer = false;
+  card.classList.remove("answerState");
+
+  cardText.innerHTML = getPrompt(c);
+  cardText.className = "prompt" + (c.direction === "formula" ? " formula" : "");
+
+  if(c.direction === "name"){
+    eyebrow.textContent = c.category === "Polyatomic ions" ? "Give the formula and charge" : "Give the formula";
+    mode.textContent = "NAME → FORMULA";
+  } else {
+    eyebrow.textContent = c.category === "Polyatomic ions" ? "Name this polyatomic ion" : "Name this compound";
+    mode.textContent = "FORMULA → NAME";
+  }
+
+  counter.textContent = `Card ${index+1} of ${deck.length}`;
+  progress.style.width = `${((index+1)/deck.length)*100}%`;
+}
+
+function flipCard(){
+  const c = deck[index];
+  showingAnswer = !showingAnswer;
+
+  if(showingAnswer){
+    cardText.innerHTML = getAnswer(c);
+    cardText.className = "prompt" + (c.direction === "name" ? " formula" : "");
+    eyebrow.textContent = "Answer";
+    card.classList.add("answerState");
+  } else {
+    renderCard();
+  }
+
+  card.classList.add("flash");
+  setTimeout(()=>card.classList.remove("flash"),280);
+}
+
+function nextCard(){
+  index = (index + 1) % deck.length;
+  renderCard();
+}
+
+function prevCard(){
+  index = (index - 1 + deck.length) % deck.length;
+  renderCard();
+}
+
+function shuffleDeck(){
+  for(let i=deck.length-1;i>0;i--){
+    const j=Math.floor(Math.random()*(i+1));
+    [deck[i],deck[j]]=[deck[j],deck[i]];
+  }
+
+  deck = deck.map(c => ({
+    ...c,
+    direction: directionSelect.value === "mixed" ? (Math.random() < 0.5 ? "name" : "formula") : directionSelect.value
+  }));
+
+  index = 0;
+  renderCard();
+  footerMsg.textContent = "Shuffled";
+}
+
+function updateTimer(){
+  const m=Math.floor(seconds/60);
+  const s=seconds%60;
+  timer.textContent=`${m}:${String(s).padStart(2,"0")}`;
+}
+
+function toggleTimer(){
+  if(timerHandle){
+    clearInterval(timerHandle);
+    timerHandle=null;
+    timerBtn.textContent="▶ Resume";
+    footerMsg.textContent="Timer paused";
+    return;
+  }
+
+  if(seconds<=0){
+    seconds=120;
+    updateTimer();
+  }
+
+  timerBtn.textContent="⏸ Pause";
+  footerMsg.textContent="Practice round running";
+
+  timerHandle=setInterval(()=>{
+    seconds--;
+    updateTimer();
+
+    if(seconds<=0){
+      clearInterval(timerHandle);
+      timerHandle=null;
+      timerBtn.textContent="↻ Reset 2:00";
+      footerMsg.textContent="Time";
+      timer.classList.add("timeup");
+      setTimeout(()=>timer.classList.remove("timeup"),4000);
+    }
+  },1000);
+}
+
+function resetTimer(){
+  if(timerHandle){
+    clearInterval(timerHandle);
+    timerHandle=null;
+  }
+  seconds=120;
+  updateTimer();
+  timerBtn.textContent="▶ Start 2:00";
+  footerMsg.textContent="Ready";
+}
+
+card.addEventListener("click", flipCard);
+document.getElementById("nextBtn").addEventListener("click", nextCard);
+document.getElementById("prevBtn").addEventListener("click", prevCard);
+document.getElementById("shuffleBtn").addEventListener("click", shuffleDeck);
+
+timerBtn.addEventListener("click", ()=>{
+  if(seconds===0) resetTimer();
+  else toggleTimer();
+});
+
+document.addEventListener("keydown", (e)=>{
+  if(e.ctrlKey || e.metaKey || e.altKey || e.repeat) return;
+  if(e.target.closest('select, input, textarea, button')) return;
+  if(e.key === "Enter" && e.target === card){e.preventDefault();flipCard();return;}
+  if(e.code==="Space"){
+    e.preventDefault();
+    flipCard();
+  } else if(e.code==="ArrowRight"){
+    e.preventDefault();
+    nextCard();
+  } else if(e.code==="ArrowLeft"){
+    e.preventDefault();
+    prevCard();
+  } else if(e.key.toLowerCase()==="r"){
+    shuffleDeck();
+  } else if(e.key.toLowerCase()==="t"){
+    if(seconds===0) resetTimer();
+    else toggleTimer();
+  } else if(e.key.toLowerCase()==="f"){
+    launchFireworks();
+  }
+});
+
+
+
+
+
+
+
+
+const categorySelect=document.getElementById('categorySelect');
+const directionSelect=document.getElementById('directionSelect');
+for(const category of [...new Set(baseDeck.map(c=>c.category))]){
+ const option=document.createElement('option');option.value=category;option.textContent=category;categorySelect.appendChild(option);
+}
+function selectDeck(){
+ deck=baseDeck.filter(c=>categorySelect.value==='all'||c.category===categorySelect.value).map(c=>({...c}));
+ shuffleDeck();footerMsg.textContent='Ready';
+}
+categorySelect.addEventListener('change',selectDeck);
+directionSelect.addEventListener('change',selectDeck);
+document.getElementById('fireworksBtn').addEventListener('click',launchFireworks);
+
+const canvas=document.getElementById('fireworks');
+const ctx=canvas.getContext('2d');
+const fireworkColors=['#a855f7','#c084fc','#9333ea','#d8b4fe','#ff7900','#ff9f1c','#ffb45e','#f97316'];
+let sparks=[],fireworkFrame=null,burstTimers=[],lastFrame=0,fireworksStartedAt=0;
+function sizeFireworks(){
+ const ratio=Math.min(window.devicePixelRatio||1,2);
+ canvas.width=innerWidth*ratio;canvas.height=innerHeight*ratio;
+ ctx.setTransform(ratio,0,0,ratio,0,0);
+}
+window.addEventListener('resize',sizeFireworks);sizeFireworks();
+function burst(x,y){
+ const radius=Math.min(innerWidth*.32,innerHeight*.42);
+ const born=performance.now();
+ for(let i=0;i<64;i++){
+  const angle=Math.PI*2*i/64+(Math.random()-.5)*.035;
+  const speed=radius*(1.7+Math.random()*.65);
+  sparks.push({x,y,vx:Math.cos(angle)*speed,vy:Math.sin(angle)*speed,
+   born,life:1.12+Math.random()*.10,color:fireworkColors[Math.floor(Math.random()*fireworkColors.length)]});
+ }
+}
+function animateFireworks(now){
+ // Use elapsed time so slow frames cannot compress the show into a late flash.
+ if(now-fireworksStartedAt>=1450){
+  burstTimers.forEach(clearTimeout);burstTimers=[];sparks=[];
+  ctx.clearRect(0,0,innerWidth,innerHeight);fireworkFrame=null;return;
+ }
+ ctx.clearRect(0,0,innerWidth,innerHeight);ctx.globalCompositeOperation='lighter';
+ sparks=sparks.filter(p=>(now-p.born)/1000<p.life);
+ for(const p of sparks){
+  const age=Math.max(0,(now-p.born)/1000);
+  if(age<.025)continue;
+  const fade=Math.min(1,Math.max(0,(p.life-age)/.48));
+  const position=t=>{const travel=(1-Math.exp(-1.5*t))/1.5;
+   return {x:p.x+p.vx*travel,y:p.y+p.vy*travel+52*t*t};};
+  const tail=Math.max(.015,age-.43);
+  ctx.beginPath();
+  for(let j=0;j<=8;j++){
+   const v=position(tail+(age-tail)*j/8);
+   if(j===0)ctx.moveTo(v.x,v.y);else ctx.lineTo(v.x,v.y);
+  }
+  // Two strokes per whole trail, rather than a blurred stroke for every segment.
+  ctx.lineCap='round';ctx.strokeStyle=p.color;
+  ctx.globalAlpha=fade*.14;ctx.lineWidth=9;ctx.stroke();
+  ctx.globalAlpha=fade*.85;ctx.lineWidth=2.4;ctx.stroke();
+  const tip=position(age);ctx.fillStyle=p.color;ctx.globalAlpha=fade*.22;
+  ctx.beginPath();ctx.arc(tip.x,tip.y,6,0,Math.PI*2);ctx.fill();
+  ctx.globalAlpha=fade;ctx.beginPath();ctx.arc(tip.x,tip.y,2.4,0,Math.PI*2);ctx.fill();
+ }
+ ctx.globalAlpha=1;ctx.globalCompositeOperation='source-over';
+ if(sparks.length||burstTimers.length)fireworkFrame=requestAnimationFrame(animateFireworks);
+ else{fireworkFrame=null;ctx.clearRect(0,0,innerWidth,innerHeight);}
+}
+function launchFireworks(){
+ fireworksStartedAt=performance.now();
+ burstTimers.forEach(clearTimeout);burstTimers=[];sparks=[];
+ const spots=[[.27,.43],[.73,.43],[.50,.30]];
+ spots.forEach(([x,y],i)=>{
+  const timer=setTimeout(()=>{burstTimers=burstTimers.filter(t=>t!==timer);burst(innerWidth*x,innerHeight*y);},i*100);
+  burstTimers.push(timer);
+ });
+ if(!fireworkFrame){lastFrame=performance.now();fireworkFrame=requestAnimationFrame(animateFireworks);}
+ footerMsg.textContent='Celebrate! 🎆';
+}
+selectDeck();
+</script>
+</body>
+</html>
