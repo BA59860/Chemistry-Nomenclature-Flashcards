@@ -411,7 +411,8 @@
   .small-help,.practice-help{font-size:12px;line-height:1.6;color:var(--muted)}
   .small-help{margin-top:8px}
   #feedback{min-height:24px;margin-top:12px;font-size:14px;line-height:1.55;font-weight:700}
-  #feedback[data-tone="success"]{color:#93e2b4}
+  #feedback[data-tone="success"]{color:#93e2b4;animation:correctGlow .45s ease-out}
+  @keyframes correctGlow{from{background:rgba(147,226,180,.18)}to{background:transparent}}
   #feedback[data-tone="retry"]{color:#ffc58c}
   .practice-help{border-top:1px solid var(--line);padding-top:10px;margin-top:8px}
   .practice-help summary{cursor:pointer;width:fit-content}
@@ -437,7 +438,7 @@
     h1{font-size:clamp(26px,6vw,32px)}
     .score-row button{margin-left:0}
   }
-  @media(prefers-reduced-motion:reduce){.flash,.timeup{animation:none}button,.card,#progress{transition:none}}
+  @media(prefers-reduced-motion:reduce){.flash,.timeup,#feedback[data-tone="success"]{animation:none}button,.card,#progress{transition:none}}
 </style>
 </head>
 <body>
@@ -536,7 +537,7 @@
       <p>Names ignore capitalization and extra spaces, including spaces around Roman numerals. Bicarbonate and hydrogen carbonate are both accepted.</p>
       <p>The formatting buttons change typed numbers and signs, or reformat a selection. Normal returns to ordinary typing. You can also tap the on-screen number and symbol keys. Each new card starts in Normal.</p>
       <p>Formulas accept ordinary digits or subscripts. Element capitalization, subscripts, parentheses, and ion charges must be correct. For example: Ca3(PO4)2 or Ca₃(PO₄)₂. For ions, use SO4^2- or SO₄²⁻, and NH4+ or NH₄⁺. Include (aq) for acids. For hydrates, use a middle dot or a period: CuSO4·5H2O or CuSO4.5H2O.</p>
-      <p><strong>Correct</strong> counts first-try answers. <strong>Missed</strong> counts a card when you first get it wrong; retries do not add misses. A correct retry helps you learn but does not change that card’s score. <strong>Streak</strong> counts consecutive first-try answers and resets on a miss. Each card and direction is scored once per session. Skips are unscored.</p>
+      <p><strong>Correct</strong> counts first-try answers. <strong>Missed</strong> counts a card when you first get it wrong; retries do not add misses. A correct retry helps you learn but does not change that card’s score. <strong>Streak</strong> counts consecutive first-try answers and resets on a miss. Each card and direction is scored once per session. Skips are unscored. Fireworks celebrate each 10-answer streak; use Celebrate anytime.</p>
       <p>Scores stay with you when you change categories, directions, or modes. New session clears scores and restarts the deck and timer. Scores stay only in this open page.</p>
     </details>
   </section>
@@ -1061,11 +1062,15 @@ function checkAnswer(event){
     state.feedback='Type an answer first. Blank answers do not affect your score.';state.tone='';renderCard();focusAnswer();return;
   }
   const correct=isCorrectAnswer(c,state.input);
+  const firstAttempt=!state.outcome;
   scoreFirstAttempt(state,correct);
   if(correct){
     state.resolved=true;state.tone='success';
-    state.feedback=state.attempts?'Correct — nice recovery! This card stays in Missed; keep going.':'Correct! First try — keep it going.';
-    renderCard();launchFireworks();byId('nextBtn').focus({preventScroll:true});
+    const milestone=firstAttempt&&session.streak>0&&session.streak%10===0;
+    state.feedback=state.attempts?'✓ Correct — nice recovery! This card stays in Missed; keep going.':milestone?`✓ Correct! ${session.streak} in a row — time to celebrate!`:'✓ Correct! First try — keep it going.';
+    renderCard();
+    if(milestone) launchFireworks();
+    byId('nextBtn').focus({preventScroll:true});
   }else{
     state.attempts++;
     state.tone='retry';
@@ -1272,6 +1277,7 @@ function animateFireworks(now){
  else{fireworkFrame=null;ctx.clearRect(0,0,innerWidth,innerHeight);}
 }
 function launchFireworks(){
+ if(window.matchMedia('(prefers-reduced-motion: reduce)').matches){footerMsg.textContent='Celebrate! 🎉';return;}
  fireworksStartedAt=performance.now();
  burstTimers.forEach(clearTimeout);burstTimers=[];sparks=[];
  const spots=[[.27,.43],[.73,.43],[.50,.30]];
