@@ -350,7 +350,27 @@
 
   /* v0.2 additions: keep the original palette, card, and controls. */
   [hidden]{display:none!important}
-  .app{grid-template-rows:auto auto auto 1fr auto auto}
+  .app{grid-template-rows:auto auto auto 1fr auto}
+  .study-workspace{display:grid;gap:16px;min-width:0;scroll-margin-top:16px}
+  .study-workspace > *{min-width:0}
+  .practice-workspace{align-content:start}
+  .practice-workspace .stage{align-items:flex-start}
+  .practice-workspace .card.practice-card{width:100%;min-height:180px;padding:20px;height:auto}
+  .practice-workspace .practice-card .eyebrow{margin-bottom:12px}
+  .practice-workspace .practice-card .hint{margin-top:12px}
+  .practice-workspace .practice-card .category-label{margin-bottom:12px}
+  .direction-control{display:grid;gap:6px;flex:1;min-width:290px}
+  .control-label{font-size:13px;color:var(--muted);font-weight:700}
+  .direction-buttons{display:flex;gap:6px;flex-wrap:wrap}
+  .direction-buttons button{padding:10px 12px;font-size:13px;min-height:40px}
+  .direction-buttons button[aria-pressed="true"]{border-color:#c998ff;background:#4b3569;color:#fff}
+  .direction-help{font-size:12px;color:var(--muted)}
+  @media(min-width:1000px){
+    .practice-workspace{grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);align-items:start}
+    .practice-workspace .card.practice-card{min-height:320px}
+    .practice-workspace .practice-card .prompt{font-size:clamp(28px,3.5vw,46px)}
+    .practice-workspace .practice-area{width:100%;padding:18px}
+  }
   .filters{gap:12px 18px}
   .mode-switch{display:flex;gap:12px;flex-basis:100%}
   .mode-button{flex:1;display:grid;gap:5px;padding:16px 20px;text-align:center;border:2px solid #66537f;background:#1d2230;font-size:18px}
@@ -400,7 +420,10 @@
   @media(max-width:700px){
     .app{width:100%;gap:14px}
     .filters label{width:auto;flex:1;min-width:140px}
-    .filters label:has(#categorySelect){flex-basis:100%;order:3}
+    .filters label:has(#categorySelect){flex-basis:100%}
+    .direction-control{flex-basis:100%;min-width:0}
+    .direction-buttons button{flex:1;min-width:0;padding:10px 6px;font-size:12px}
+    .practice-workspace .card.practice-card{min-height:150px;padding:18px}
     .card.practice-card{min-height:260px;padding:24px 18px}
     .practice-area{padding:16px}
     .answer-row button{flex:1;min-width:120px;white-space:nowrap}
@@ -432,11 +455,19 @@
 
   <div class="filters">
     <div class="mode-switch" role="group" aria-label="Study mode">
-      <button id="flashModeBtn" class="mode-button" type="button" data-study-mode="flash" aria-pressed="true"><span>Flashcard Mode</span><small>Think, then reveal</small></button>
+      <button id="flashModeBtn" class="mode-button" type="button" data-study-mode="flash" aria-pressed="true"><span>Flash Cards</span><small>Think, then reveal</small></button>
       <button id="practiceModeBtn" class="mode-button" type="button" data-study-mode="practice" aria-pressed="false"><span>Practice Mode</span><small>Type, then check</small></button>
     </div>
     <label>Practice category<select id="categorySelect"><option value="all">All categories</option><option value="surprise">🎲 Surprise Me</option></select></label>
-    <label>Card direction<select id="directionSelect"><option value="mixed">Mixed directions</option><option value="name">Name → formula</option><option value="formula">Formula → name</option></select></label>
+    <div class="direction-control">
+      <span id="directionLabel" class="control-label">Card direction</span>
+      <div id="directionButtons" class="direction-buttons" role="group" aria-labelledby="directionLabel" aria-describedby="directionHelp">
+        <button type="button" data-direction="name" aria-pressed="false">Name → formula</button>
+        <button type="button" data-direction="formula" aria-pressed="false">Formula → name</button>
+        <button type="button" data-direction="mixed" aria-pressed="true">Mixed directions</button>
+      </div>
+      <span id="directionHelp" class="direction-help">Choose which side appears first.</span>
+    </div>
   </div>
   <div class="toolbar">
     <div class="status">
@@ -451,6 +482,7 @@
     </div>
   </div>
 
+  <div id="studyWorkspace" class="study-workspace">
   <div class="stage">
     <div id="card" class="card" role="button" tabindex="0" aria-label="Flashcard. Press spacebar to reveal the answer.">
       <div class="inner" aria-live="polite">
@@ -508,6 +540,8 @@
       <p>Scores stay with you when you change categories, directions, or modes. New session clears scores and restarts the deck and timer. Scores stay only in this open page.</p>
     </details>
   </section>
+
+  </div>
 
   <footer>
     <div class="keys">
@@ -898,7 +932,8 @@ const byId=id=>document.getElementById(id);
 const card=byId('card'),cardText=byId('cardText'),eyebrow=byId('eyebrow');
 const counter=byId('counter'),mode=byId('mode'),progress=byId('progress');
 const footerMsg=byId('footerMsg'),categorySelect=byId('categorySelect');
-const directionSelect=byId('directionSelect');
+const directionButtons=[...document.querySelectorAll('[data-direction]')];
+const directionPreferences={flash:'mixed',practice:'name'};
 const modeButtons=[...document.querySelectorAll('[data-study-mode]')];
 let studyMode='flash';
 const practiceArea=byId('practiceArea'),answerInput=byId('answerInput');
@@ -951,6 +986,8 @@ function renderCard(){
   counter.textContent=`Card ${index+1} of ${deck.length}`;
   progress.style.width=`${(index+1)/deck.length*100}%`;
   practiceArea.hidden=!practice;
+  byId('studyWorkspace').classList.toggle('practice-workspace',practice);
+  updateDirectionControls();
   modeButtons.forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.studyMode===studyMode)));
   formulaTools.hidden=!practice||c.direction!=='name';
   byId('modeKeys').innerHTML=practice?'<kbd>Enter</kbd> check answer':'<kbd>Space</kbd> reveal';
@@ -979,16 +1016,37 @@ function flipCard(){
 }
 function nextCard(){index=(index+1)%deck.length;resetFace();focusAnswer();}
 function prevCard(){index=(index-1+deck.length)%deck.length;resetFace();focusAnswer();}
+function updateDirectionControls(){
+  const surprise=categorySelect.value==='surprise';
+  const selected=surprise?'mixed':directionPreferences[studyMode];
+  const labels=isPractice()?{name:'Write the formula',formula:'Name the compound',mixed:'Mixed practice'}:{name:'Name → formula',formula:'Formula → name',mixed:'Mixed directions'};
+  byId('directionLabel').textContent=isPractice()?'Practice task':'Card direction';
+  byId('directionHelp').textContent=surprise?'Surprise Me chooses a random direction for every card.':isPractice()?'Type your answer below, then choose Check Answer.':'Choose which side appears first; click the card to reveal the answer.';
+  directionButtons.forEach(button=>{
+    button.textContent=labels[button.dataset.direction];
+    button.setAttribute('aria-pressed',String(button.dataset.direction===selected));
+    button.disabled=surprise;
+  });
+}
+function applyDirections(){
+  const direction=directionPreferences[studyMode];
+  const randomDirection=categorySelect.value==='surprise'||direction==='mixed';
+  deck=deck.map(c=>({...c,direction:randomDirection?(Math.random()<.5?'name':'formula'):direction}));
+}
+function showPracticeWorkspace(){
+  if(!isPractice()) return;
+  // Keep the prompt and typing controls together when the preview is short.
+  const rect=answerInput.getBoundingClientRect();
+  if(rect.bottom>innerHeight-20||rect.top<0) byId('studyWorkspace').scrollIntoView({block:'start',behavior:'auto'});
+  focusAnswer();
+}
 function shuffleDeck(){
   for(let i=deck.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[deck[i],deck[j]]=[deck[j],deck[i]];}
-  const randomDirection=categorySelect.value==='surprise'||directionSelect.value==='mixed';
-  deck=deck.map(c=>({...c,direction:randomDirection?(Math.random()<.5?'name':'formula'):directionSelect.value}));
+  applyDirections();
   index=0;resetFace();footerMsg.textContent='Shuffled';
 }
 function selectDeck(){
   const selected=categorySelect.value;
-  directionSelect.disabled=selected==='surprise';
-  directionSelect.title=selected==='surprise'?'Surprise Me chooses a random direction for each card.':'';
   deck=baseDeck.filter(c=>selected==='all'||selected==='surprise'||c.category===selected).map(c=>({...c}));
   shuffleDeck();
   footerMsg.textContent=selected==='surprise'?'Surprise Me • random directions':`${baseDeck.length} practice items • ready`;
@@ -1031,10 +1089,14 @@ for(const [category,entries] of Object.entries(chemistryBank)){
   const option=document.createElement('option');option.value=category;option.textContent=`${category} (${entries.length})`;categorySelect.appendChild(option);
 }
 categorySelect.addEventListener('change',selectDeck);
-directionSelect.addEventListener('change',selectDeck);
+directionButtons.forEach(button=>button.addEventListener('click',()=>{
+  if(categorySelect.value==='surprise') return;
+  directionPreferences[studyMode]=button.dataset.direction;
+  applyDirections();resetFace();showPracticeWorkspace();
+}));
 modeButtons.forEach(button=>button.addEventListener('click',()=>{
-  if(studyMode===button.dataset.studyMode) return;
-  studyMode=button.dataset.studyMode;resetFace();focusAnswer();
+  if(studyMode!==button.dataset.studyMode){studyMode=button.dataset.studyMode;applyDirections();resetFace();}
+  showPracticeWorkspace();
 }));
 card.addEventListener('click',flipCard);
 byId('nextBtn').addEventListener('click',nextCard);
