@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Chemistry Nomenclature Flashcards</title>
+<title>Chemistry Nomenclature Flashcards v0.2</title>
 <style>
   :root{
     --bg:#0d1117;
@@ -347,6 +347,74 @@
   #fireworks{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:99999}
   :focus-visible{outline:3px solid #ff922e;outline-offset:4px}
   @media(max-width:700px){body{padding:14px}.card{padding:22px;height:390px}.status{flex-wrap:wrap}.filters label{width:100%}h1{font-size:32px}}
+
+  /* v0.2 additions: keep the original palette, card, and controls. */
+  [hidden]{display:none!important}
+  .app{grid-template-rows:auto auto auto 1fr auto auto}
+  .filters{gap:12px 18px}
+  .mode-switch{display:flex;gap:12px;flex-basis:100%}
+  .mode-button{flex:1;display:grid;gap:5px;padding:16px 20px;text-align:center;border:2px solid #66537f;background:#1d2230;font-size:18px}
+  .mode-button small{font-size:12px;font-weight:600;color:var(--muted)}
+  .mode-button[aria-pressed="true"]{background:linear-gradient(110deg,#ff922e,#ffb45e);border-color:#ffad59;color:#131821;box-shadow:0 4px 18px rgba(255,146,46,.16)}
+  .mode-button[aria-pressed="true"] small{color:#322416}
+  @media(max-width:700px){.mode-switch{gap:8px}.mode-button{padding:14px 8px;font-size:16px}}
+  .filters label{min-width:160px}
+  .status{flex-wrap:wrap}
+  .card{max-width:100%}
+  .card.practice-card{height:auto;min-height:290px;cursor:default;padding:28px 36px}
+  .practice-card .prompt{font-size:clamp(28px,4.7vw,58px)}
+  .practice-card .eyebrow{margin-bottom:18px}
+  .practice-card .hint{margin-top:20px;font-size:14px}
+  .practice-card:active{transform:none}
+  .practice-area{width:min(900px,100%);justify-self:center;background:rgba(22,27,34,.94);border:1px solid var(--line);border-radius:18px;padding:18px 22px}
+  .score-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:16px}
+  .score-row button{margin-left:auto;font-size:12px;padding:8px 10px}
+  .score-row strong{font-variant-numeric:tabular-nums}
+  #answerLabel{display:block;color:var(--muted);font-size:13px;font-weight:700;margin-bottom:7px}
+  .answer-row{display:flex;gap:10px;flex-wrap:wrap}
+  #answerInput{flex:1;min-width:200px;width:100%;background:#0d1117;border:1px solid #586277;border-radius:12px;color:var(--text);font:inherit;font-size:18px;padding:12px 14px}
+  #answerInput.formula-input{font-family:"SFMono-Regular",Consolas,monospace}
+  #answerInput[aria-invalid="true"]{border-color:var(--accent)}
+  button.primary{background:linear-gradient(110deg,#ff922e,#ffb45e);color:#131821;border-color:transparent}
+  button:disabled{opacity:.5;cursor:default;transform:none}
+  select:disabled{opacity:.6}
+  .formula-tools{margin-top:12px;padding:12px;background:#111720;border:1px solid var(--line);border-radius:12px}
+  .format-modes{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-bottom:10px}
+  .format-label{font-size:12px;font-weight:800;color:var(--muted);margin-right:4px}
+  .format-modes button{font-size:12px;min-height:40px;padding:8px 10px}
+  .format-modes button[aria-pressed="true"]{background:#4b3569;border-color:#c998ff;color:#fff}
+  .formula-keypad{display:flex;flex-wrap:wrap;gap:10px}
+  .digit-keys{display:grid;grid-template-columns:repeat(10,minmax(0,1fr));gap:5px;flex:1;min-width:320px}
+  .symbol-keys{display:flex;gap:5px}
+  .formula-keypad button{font-family:"SFMono-Regular",Consolas,monospace;font-size:19px;min-width:36px;min-height:42px;padding:7px}
+  #formatStatus{color:#d6b2ff;font-weight:700}
+  .small-help,.practice-help{font-size:12px;line-height:1.6;color:var(--muted)}
+  .small-help{margin-top:8px}
+  #feedback{min-height:24px;margin-top:12px;font-size:14px;line-height:1.55;font-weight:700}
+  #feedback[data-tone="success"]{color:#93e2b4}
+  #feedback[data-tone="retry"]{color:#ffc58c}
+  .practice-help{border-top:1px solid var(--line);padding-top:10px;margin-top:8px}
+  .practice-help summary{cursor:pointer;width:fit-content}
+  .practice-help p{margin:10px 0 0}
+  .prompt.formula{overflow-wrap:anywhere}
+  @media(max-width:700px){
+    .app{width:100%;gap:14px}
+    .filters label{width:auto;flex:1;min-width:140px}
+    .filters label:has(#categorySelect){flex-basis:100%;order:3}
+    .card.practice-card{min-height:260px;padding:24px 18px}
+    .practice-area{padding:16px}
+    .answer-row button{flex:1;min-width:120px;white-space:nowrap}
+    .format-label{flex-basis:100%}
+    .format-modes button{flex:1;padding:8px 5px}
+    .digit-keys{min-width:0;flex-basis:100%;grid-template-columns:repeat(5,minmax(0,1fr))}
+    .symbol-keys{width:100%}
+    .symbol-keys button{flex:1}
+    #answerInput{flex-basis:100%;min-width:0}
+    .toolbar{gap:12px}.actions{width:100%}.actions button{flex:1;white-space:nowrap}
+    h1{font-size:clamp(26px,6vw,32px)}
+    .score-row button{margin-left:0}
+  }
+  @media(prefers-reduced-motion:reduce){.flash,.timeup{animation:none}button,.card,#progress{transition:none}}
 </style>
 </head>
 <body>
@@ -354,7 +422,7 @@
   <header>
     <div>
       <h1>Chemistry Nomenclature Flashcards</h1>
-      <div class="sub">CHMY 041 • Names, formulas, and a little celebration</div>
+      <div class="sub">CHMY 041 • Names, formulas, and a little celebration • v0.2</div>
     </div>
     <div class="timerBox">
       <div class="timerLabel">Practice Timer</div>
@@ -363,12 +431,16 @@
   </header>
 
   <div class="filters">
-    <label>Practice category<select id="categorySelect"><option value="all">All categories</option></select></label>
+    <div class="mode-switch" role="group" aria-label="Study mode">
+      <button id="flashModeBtn" class="mode-button" type="button" data-study-mode="flash" aria-pressed="true"><span>Flashcard Mode</span><small>Think, then reveal</small></button>
+      <button id="practiceModeBtn" class="mode-button" type="button" data-study-mode="practice" aria-pressed="false"><span>Practice Mode</span><small>Type, then check</small></button>
+    </div>
+    <label>Practice category<select id="categorySelect"><option value="all">All categories</option><option value="surprise">🎲 Surprise Me</option></select></label>
     <label>Card direction<select id="directionSelect"><option value="mixed">Mixed directions</option><option value="name">Name → formula</option><option value="formula">Formula → name</option></select></label>
   </div>
   <div class="toolbar">
     <div class="status">
-      <span id="counter" class="pill">Card 1 of 9</span>
+      <span id="counter" class="pill">Loading deck…</span>
       <span id="mode" class="pill">NAME → FORMULA</span>
     </div>
     <div class="actions">
@@ -382,15 +454,64 @@
   <div class="stage">
     <div id="card" class="card" role="button" tabindex="0" aria-label="Flashcard. Press spacebar to reveal the answer.">
       <div class="inner" aria-live="polite">
+        <div id="categoryLabel" class="category-label"></div>
         <div id="eyebrow" class="eyebrow">Give the formula and charge</div>
-        <div id="cardText" class="prompt">nitrate</div>
+        <div id="cardText" class="prompt"></div>
+        <div id="cardHint" class="hint">Click the card or press Space to reveal</div>
       </div>
     </div>
   </div>
 
+  <section id="practiceArea" class="practice-area" aria-label="Practice answer" hidden>
+    <div class="score-row" aria-live="polite" aria-atomic="true">
+      <span class="pill">✓ Correct: <strong id="correctCount">0</strong></span>
+      <span class="pill">Missed: <strong id="missedCount">0</strong></span>
+      <span class="pill">🔥 Streak: <strong id="streakCount">0</strong></span>
+      <button id="resetSessionBtn" type="button">New session</button>
+    </div>
+    <form id="answerForm" novalidate>
+      <label for="answerInput" id="answerLabel">Your answer</label>
+      <div class="answer-row">
+        <input id="answerInput" type="text" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" maxlength="200" aria-describedby="inputHelp formatHelp feedback" enterkeyhint="done" placeholder="Type your answer here">
+        <button id="checkBtn" class="primary" type="submit">Check Answer</button>
+        <button id="showAnswerBtn" type="button" hidden>Show Answer</button>
+      </div>
+      <div id="formulaTools" class="formula-tools" hidden>
+        <div class="format-modes" role="group" aria-label="Formula typing style">
+          <span class="format-label">Formula formatting</span>
+          <button type="button" data-format="normal" aria-pressed="true">Normal</button>
+          <button type="button" data-format="subscript" aria-pressed="false">x₂ Subscript</button>
+          <button type="button" data-format="superscript" aria-pressed="false">x² Superscript</button>
+        </div>
+        <div class="formula-keypad">
+          <div id="digitKeys" class="digit-keys" role="group" aria-label="Formula numbers"></div>
+          <div class="symbol-keys" role="group" aria-label="Formula symbols">
+            <button type="button" data-insert="+" aria-label="Insert plus sign">+</button>
+            <button type="button" data-insert="-" aria-label="Insert minus sign">−</button>
+            <button type="button" data-insert="(" aria-label="Insert opening parenthesis">(</button>
+            <button type="button" data-insert=")" aria-label="Insert closing parenthesis">)</button>
+            <button type="button" data-insert="·" aria-label="Insert hydrate dot">·</button>
+          </div>
+        </div>
+        <div id="formatStatus" class="small-help" role="status" aria-live="polite"></div>
+        <div id="formatHelp" class="small-help">Choose a style, then type or tap numbers and signs. Select existing digits to reformat them. Use subscripts for atom counts (H₂O), superscripts for charges (SO₄²⁻), and Normal for hydrate coefficients (·5H₂O). Letters and parentheses stay normal.</div>
+      </div>
+      <div id="inputHelp" class="small-help"></div>
+      <div id="feedback" role="status" aria-live="polite" aria-atomic="true"></div>
+    </form>
+    <details class="practice-help">
+      <summary>Typing and scoring tips</summary>
+      <p>Names ignore capitalization and extra spaces, including spaces around Roman numerals. Bicarbonate and hydrogen carbonate are both accepted.</p>
+      <p>The formatting buttons change typed numbers and signs, or reformat a selection. Normal returns to ordinary typing. You can also tap the on-screen number and symbol keys. Each new card starts in Normal.</p>
+      <p>Formulas accept ordinary digits or subscripts. Element capitalization, subscripts, parentheses, and ion charges must be correct. For example: Ca3(PO4)2 or Ca₃(PO₄)₂. For ions, use SO4^2- or SO₄²⁻, and NH4+ or NH₄⁺. Include (aq) for acids. For hydrates, use a middle dot or a period: CuSO4·5H2O or CuSO4.5H2O.</p>
+      <p><strong>Correct</strong> counts first-try answers. <strong>Missed</strong> counts a card when you first get it wrong; retries do not add misses. A correct retry helps you learn but does not change that card’s score. <strong>Streak</strong> counts consecutive first-try answers and resets on a miss. Each card and direction is scored once per session. Skips are unscored.</p>
+      <p>Scores stay with you when you change categories, directions, or modes. New session clears scores and restarts the deck and timer. Scores stay only in this open page.</p>
+    </details>
+  </section>
+
   <footer>
     <div class="keys">
-      <span><kbd>Space</kbd> reveal</span>
+      <span id="modeKeys"><kbd>Space</kbd> reveal</span>
       <span><kbd>←</kbd> previous</span>
       <span><kbd>→</kbd> next</span>
       <span><kbd>R</kbd> reshuffle</span>
@@ -398,227 +519,644 @@
       <span><kbd>F</kbd> fireworks</span>
     </div>
     <div class="progressWrap" aria-label="Deck progress"><div id="progress"></div></div>
-    <div id="footerMsg">Ready</div>
+    <div id="footerMsg" role="status">Ready</div>
   </footer>
 </div>
 
 <canvas id="fireworks" aria-hidden="true"></canvas>
-<script>
-const ionDeck = [
-  {name:"phosphate", formula:"PO<span class='ion-stack'><sup>3−</sup><sub>4</sub></span>", direction:"name"},
-  {name:"sulfate",   formula:"SO<span class='ion-stack'><sup>2−</sup><sub>4</sub></span>", direction:"formula"},
-  {name:"sulfite",   formula:"SO<span class='ion-stack'><sup>2−</sup><sub>3</sub></span>", direction:"name"},
-  {name:"nitrate",   formula:"NO<span class='ion-stack'><sup>−</sup><sub>3</sub></span>",  direction:"formula"},
-  {name:"nitrite",   formula:"NO<span class='ion-stack'><sup>−</sup><sub>2</sub></span>",  direction:"name"},
-  {name:"hydroxide", formula:"OH<sup>−</sup>",   direction:"formula"},
-  {name:"carbonate", formula:"CO<span class='ion-stack'><sup>2−</sup><sub>3</sub></span>", direction:"name"},
-  {name:"ammonium",  formula:"NH<span class='ion-stack'><sup>+</sup><sub>4</sub></span>",  direction:"formula"},
-  {name:"cyanide",   formula:"CN<sup>−</sup>",   direction:"name"}
-].map(c => ({...c, category:"Polyatomic ions", note:"Include the ion charge."}));
+<script id="chemistry-bank">
+/* =====================================================================
+   CHEMISTRY NOMENCLATURE FLASHCARDS v0.2 — EDITABLE CHEMISTRY BANK
+   ---------------------------------------------------------------------
+   Edit curated pair lists below, not the UI code. Each of the first five
+   categories must contain exactly 50 distinct entries. Startup validation
+   catches duplicate formulas and incorrect category totals.
 
-const groups = {"Type I \u2014 binary ionic": [["sodium chloride", "NaCl"], ["magnesium oxide", "MgO"], ["calcium bromide", "CaBr2"], ["aluminum sulfide", "Al2S3"], ["potassium nitride", "K3N"], ["magnesium chloride", "MgCl2"], ["calcium oxide", "CaO"], ["aluminum oxide", "Al2O3"]], "Type II \u2014 binary ionic": [["iron(II) chloride", "FeCl2"], ["iron(III) chloride", "FeCl3"], ["copper(I) oxide", "Cu2O"], ["copper(II) oxide", "CuO"], ["tin(II) fluoride", "SnF2"], ["tin(IV) chloride", "SnCl4"], ["lead(II) sulfide", "PbS"], ["iron(III) oxide", "Fe2O3"]], "Type I \u2014 with polyatomic ions": [["sodium nitrate", "NaNO3"], ["calcium nitrate", "Ca(NO3)2"], ["magnesium hydroxide", "Mg(OH)2"], ["aluminum sulfate", "Al2(SO4)3"], ["potassium carbonate", "K2CO3"], ["calcium phosphate", "Ca3(PO4)2"], ["sodium acetate", "NaC2H3O2"], ["barium sulfate", "BaSO4"]], "Type II \u2014 with polyatomic ions": [["iron(II) sulfate", "FeSO4"], ["iron(III) sulfate", "Fe2(SO4)3"], ["copper(II) nitrate", "Cu(NO3)2"], ["iron(III) hydroxide", "Fe(OH)3"], ["cobalt(II) carbonate", "CoCO3"], ["lead(II) nitrate", "Pb(NO3)2"], ["tin(IV) sulfate", "Sn(SO4)2"], ["iron(III) sulfite", "Fe2(SO3)3"]], "Binary molecular (covalent)": [["carbon monoxide", "CO"], ["carbon dioxide", "CO2"], ["dinitrogen monoxide", "N2O"], ["dinitrogen trioxide", "N2O3"], ["dinitrogen tetroxide", "N2O4"], ["dinitrogen pentoxide", "N2O5"], ["sulfur hexafluoride", "SF6"], ["phosphorus trichloride", "PCl3"]], "Binary acids": [["hydrofluoric acid", "HF(aq)"], ["hydrochloric acid", "HCl(aq)"], ["hydrobromic acid", "HBr(aq)"], ["hydroiodic acid", "HI(aq)"], ["hydrosulfuric acid", "H2S(aq)"]], "Oxyacids": [["nitric acid", "HNO3(aq)"], ["nitrous acid", "HNO2(aq)"], ["sulfuric acid", "H2SO4(aq)"], ["sulfurous acid", "H2SO3(aq)"], ["phosphoric acid", "H3PO4(aq)"], ["carbonic acid", "H2CO3(aq)"], ["hypochlorous acid", "HClO(aq)"], ["chlorous acid", "HClO2(aq)"], ["chloric acid", "HClO3(aq)"], ["perchloric acid", "HClO4(aq)"], ["acetic acid", "HC2H3O2(aq)"]], "Hydrates": [["copper(II) sulfate pentahydrate", "CuSO4\u00b75H2O"], ["cobalt(II) chloride hexahydrate", "CoCl2\u00b76H2O"], ["magnesium sulfate heptahydrate", "MgSO4\u00b77H2O"], ["sodium carbonate decahydrate", "Na2CO3\u00b710H2O"], ["calcium sulfate dihydrate", "CaSO4\u00b72H2O"], ["barium chloride dihydrate", "BaCl2\u00b72H2O"], ["iron(II) sulfate heptahydrate", "FeSO4\u00b77H2O"], ["lithium chloride monohydrate", "LiCl\u00b7H2O"]]};
-const categoryNotes = {"Type I \u2014 binary ionic": "Use the fixed metal charge; balance charges. No molecular prefixes.", "Type II \u2014 binary ionic": "The Roman numeral is the charge on one metal ion, not the atom count.", "Type I \u2014 with polyatomic ions": "Keep the polyatomic ion intact. Use parentheses for more than one copy.", "Type II \u2014 with polyatomic ions": "Balance the ion charges; use a Roman numeral for the metal charge.", "Binary molecular (covalent)": "Prefixes count atoms. Omit mono- on the first element; do not reduce subscripts.", "Binary acids": "Aqueous binary acid: hydro- + root + -ic acid. Include (aq).", "Oxyacids": "-ate \u2192 -ic acid; -ite \u2192 -ous acid. Keep hypo-/per-; do not add hydro-.", "Hydrates": "Name the ionic compound, then use a prefix + hydrate for the number of waters."};
+   These are introductory nomenclature categories: fixed-charge versus
+   variable-charge naming conventions, not a model of bonding in every phase.
+   Explicit pair lists avoid inventing compounds from a Cartesian product.
+   Formulas are generated by charge balance only for the curated ion pairs.
+   Acids and hydrates are retained from the uploaded original HTML.
 
-function formatFormula(raw){
-  return raw.split('·').map((part,i)=>{
-    const match = i ? part.match(/^(\d+)(.*)$/) : null;
-    const coefficient = match ? match[1] : '';
-    const formula = match ? match[2] : part;
-    return coefficient + formula.replace(/(\d+)/g,'<sub>$1</sub>').replace('(aq)','<span class="state">(aq)</span>');
+   Reference checks (no network is needed to use this file):
+   https://openstax.org/books/chemistry-2e/pages/2-7-chemical-nomenclature
+   https://pubchem.ncbi.nlm.nih.gov/compound/Tetraphosphorus-heptasulfide
+   https://webbook.nist.gov/cgi/cbook.cgi?ID=10248-58-5
+   https://pubchem.ncbi.nlm.nih.gov/compound/Chromic-phosphate
+   https://pubchem.ncbi.nlm.nih.gov/compound/Manganese-phosphate
+   https://pubchem.ncbi.nlm.nih.gov/compound/Stannous-sulfate
+   https://pubchem.ncbi.nlm.nih.gov/compound/Titanium-disulfate
+   ===================================================================== */
+const CATEGORY = {
+  type1: 'Type I — binary ionic',
+  type2: 'Type II — binary ionic',
+  poly1: 'Type I + polyatomic',
+  poly2: 'Type II + polyatomic',
+  molecular: 'Binary molecular',
+  binaryAcids: 'Binary acids',
+  oxyacids: 'Oxyacids',
+  hydrates: 'Hydrates',
+  ions: 'Polyatomic ions'
+};
+const MAIN_CATEGORIES = [CATEGORY.type1,CATEGORY.type2,CATEGORY.poly1,CATEGORY.poly2,CATEGORY.molecular];
+const ROMAN = {1:'I',2:'II',3:'III',4:'IV',5:'V',6:'VI'};
+const fixedMetals = {
+  Li:['lithium',1], Na:['sodium',1], K:['potassium',1],
+  Mg:['magnesium',2], Ca:['calcium',2], Sr:['strontium',2],
+  Ba:['barium',2], Al:['aluminum',3], Zn:['zinc',2]
+};
+const variableMetals = {
+  Fe:'iron', Cu:'copper', Co:'cobalt', Ni:'nickel', Sn:'tin',
+  Pb:'lead', Cr:'chromium', Mn:'manganese', Ti:'titanium'
+};
+const monatomicAnions = {
+  F:['fluoride',-1], Cl:['chloride',-1], Br:['bromide',-1], I:['iodide',-1],
+  O:['oxide',-2], S:['sulfide',-2], N:['nitride',-3], P:['phosphide',-3]
+};
+// Exactly the 15 preferred standalone ions. Formula aliases retain structure.
+const polyatomicIons = [
+  {name:'acetate',raw:'C2H3O2',charge:-1,formulaAliases:['CH3COO','CH3CO2'],aliases:['ethanoate']},
+  {name:'carbonate',raw:'CO3',charge:-2},
+  {name:'hydrogen carbonate',raw:'HCO3',charge:-1,aliases:['bicarbonate','hydrogencarbonate']},
+  {name:'hydroxide',raw:'OH',charge:-1},
+  {name:'nitrite',raw:'NO2',charge:-1},
+  {name:'nitrate',raw:'NO3',charge:-1},
+  {name:'phosphate',raw:'PO4',charge:-3},
+  {name:'ammonium',raw:'NH4',charge:1},
+  {name:'hypochlorite',raw:'ClO',charge:-1,formulaAliases:['OCl']},
+  {name:'chlorite',raw:'ClO2',charge:-1},
+  {name:'chlorate',raw:'ClO3',charge:-1},
+  {name:'perchlorate',raw:'ClO4',charge:-1},
+  {name:'sulfate',raw:'SO4',charge:-2},
+  {name:'sulfite',raw:'SO3',charge:-2},
+  {name:'cyanide',raw:'CN',charge:-1}
+];
+const polyByFormula = Object.fromEntries(polyatomicIons.map(ion => [ion.raw,{...ion,polyatomic:true}]));
+function fixedCation(symbol){
+  if(symbol === 'NH4') return polyByFormula.NH4;
+  const [name,charge] = fixedMetals[symbol];
+  return {name,raw:symbol,charge};
+}
+function variableCation(symbol,charge){
+  if(!variableMetals[symbol] || !ROMAN[charge]) throw new Error('Unknown variable-charge cation');
+  return {name:`${variableMetals[symbol]}(${ROMAN[charge]})`,raw:symbol,charge};
+}
+function anion(raw){
+  if(polyByFormula[raw]) return polyByFormula[raw];
+  const [name,charge] = monatomicAnions[raw];
+  return {name,raw,charge};
+}
+function gcd(a,b){while(b){[a,b]=[b,a%b];} return Math.abs(a);}
+function makeIonicFormula(cation,negativeIon){
+  if(cation.charge<=0 || negativeIon.charge>=0) throw new Error('Cation/anion charge mismatch');
+  const divisor=gcd(cation.charge,Math.abs(negativeIon.charge));
+  const nC=Math.abs(negativeIon.charge)/divisor, nA=cation.charge/divisor;
+  const group=(ion,n)=>n===1 ? ion.raw : (ion.polyatomic ? `(${ion.raw})${n}` : ion.raw+n);
+  return group(cation,nC)+group(negativeIon,nA);
+}
+function ionicEntry(cation,negativeIon){
+  return {
+    name:`${cation.name} ${negativeIon.name}`,
+    raw:makeIonicFormula(cation,negativeIon),
+    aliases:(negativeIon.aliases||[]).map(name=>`${cation.name} ${name}`),
+    formulaAliases:(negativeIon.formulaAliases||[]).map(raw=>makeIonicFormula(cation,{...negativeIon,raw})),
+    cation,anion:negativeIon
+  };
+}
+function fixedEntries(rows){
+  return rows.flatMap(([symbol,anions])=>anions.split(' ').map(raw=>ionicEntry(fixedCation(symbol),anion(raw))));
+}
+function variableEntries(rows){
+  return rows.flatMap(([symbol,charge,anions])=>anions.split(' ').map(raw=>ionicEntry(variableCation(symbol,charge),anion(raw))));
+}
+
+// 50: fixed-charge metals, 1:1 / 1:2 / 2:1 / 2:3 / 3:2 / 1:3 ratios.
+const typeIBinary = fixedEntries([
+  ['Li','F Cl Br I O S N'],
+  ['Na','F Cl Br I O S'],
+  ['K','F Cl Br I O S'],
+  ['Mg','F Cl Br O S N P'],
+  ['Ca','F Cl I O S N P'],
+  ['Sr','F Cl O S'],
+  ['Ba','Cl O S'],
+  ['Al','F Cl O S N P'],
+  ['Zn','Cl Br O S']
+]);
+// 50: curated oxidation states I–IV; no hypothetical all-pairs generation.
+const typeIIBinary = variableEntries([
+  ['Fe',2,'F Cl Br I O S'], ['Fe',3,'F Cl Br O'],
+  ['Cu',1,'Cl Br I O S'], ['Cu',2,'F Cl Br O S'],
+  ['Co',2,'F Cl Br I O S'], ['Ni',2,'F Cl Br I O S'],
+  ['Sn',2,'F Cl O S'], ['Sn',4,'F Cl O S'],
+  ['Pb',2,'F Cl I O S'], ['Pb',4,'O F'],
+  ['Cr',3,'Cl O'], ['Mn',4,'O']
+]);
+// 50: all 15 preferred ions occur in context, including ammonium as cation.
+const typeIPolyatomic = fixedEntries([
+  ['Na','C2H3O2 CO3 HCO3 OH NO2 NO3 PO4 ClO ClO2 ClO3 ClO4 SO4 SO3 CN'],
+  ['K','C2H3O2 CO3 HCO3 OH NO3 PO4 ClO3 CN'],
+  ['Mg','OH NO3 SO4 PO4 CO3'],
+  ['Ca','OH NO3 SO4 PO4 CO3 ClO C2H3O2'],
+  ['Al','OH NO3 SO4 PO4'], ['Ba','OH NO3 SO4 CO3'],
+  ['Li','CO3 PO4'], ['Zn','SO4 NO3 PO4'], ['NH4','Cl SO4 CO3']
+]);
+// 50: common salts/bases; parentheses and reduced ratios across I–IV.
+const typeIIPolyatomic = variableEntries([
+  ['Fe',2,'SO4 NO3 OH CO3 PO4 C2H3O2'], ['Fe',3,'SO4 NO3 OH PO4'],
+  ['Cu',2,'SO4 NO3 OH CO3 PO4 C2H3O2'], ['Cu',1,'CN'],
+  ['Co',2,'SO4 NO3 OH CO3 PO4 C2H3O2'],
+  ['Ni',2,'SO4 NO3 OH CO3 PO4 C2H3O2'],
+  ['Mn',2,'SO4 NO3 OH CO3 PO4 C2H3O2'],
+  ['Cr',3,'SO4 NO3 OH PO4'], ['Pb',2,'SO4 NO3 OH CO3 PO4 C2H3O2'],
+  ['Sn',2,'SO4 PO4'], ['Sn',4,'SO4'], ['Ti',3,'SO4'], ['Ti',4,'SO4']
+]);
+// 50 actual binary covalent compounds. Preserve molecular atom counts.
+// Contracted classroom oxide spellings and full prefix spellings both pass.
+const molecularEntries = [
+  ['carbon monoxide','CO'], ['carbon dioxide','CO2'], ['carbon disulfide','CS2'],
+  ['carbon tetrachloride','CCl4'], ['carbon tetrafluoride','CF4'],
+  ['carbon tetrabromide','CBr4'], ['carbon tetraiodide','CI4'],
+  ['nitrogen monoxide','NO'], ['nitrogen dioxide','NO2'], ['dinitrogen monoxide','N2O'],
+  ['dinitrogen trioxide','N2O3'], ['dinitrogen tetroxide','N2O4',['dinitrogen tetraoxide']],
+  ['dinitrogen pentoxide','N2O5',['dinitrogen pentaoxide']],
+  ['nitrogen trifluoride','NF3'], ['nitrogen trichloride','NCl3'],
+  ['dinitrogen difluoride','N2F2'], ['dinitrogen tetrafluoride','N2F4'],
+  ['sulfur dioxide','SO2'], ['sulfur trioxide','SO3'], ['sulfur tetrafluoride','SF4'],
+  ['sulfur hexafluoride','SF6'], ['sulfur dichloride','SCl2'], ['disulfur dichloride','S2Cl2'],
+  ['disulfur decafluoride','S2F10'],
+  ['phosphorus trifluoride','PF3'], ['phosphorus pentafluoride','PF5'],
+  ['phosphorus trichloride','PCl3'], ['phosphorus pentachloride','PCl5'],
+  ['phosphorus tribromide','PBr3'], ['phosphorus triiodide','PI3'],
+  ['tetraphosphorus hexoxide','P4O6',['tetraphosphorus hexaoxide']],
+  ['tetraphosphorus decoxide','P4O10',['tetraphosphorus decaoxide']],
+  ['tetraphosphorus trisulfide','P4S3'], ['tetraphosphorus heptasulfide','P4S7'],
+  ['tetraphosphorus decasulfide','P4S10'],
+  ['boron trifluoride','BF3'], ['boron trichloride','BCl3'],
+  ['boron tribromide','BBr3'], ['boron triiodide','BI3'],
+  ['silicon tetrafluoride','SiF4'], ['silicon tetrachloride','SiCl4'],
+  ['silicon tetrabromide','SiBr4'], ['silicon tetraiodide','SiI4'],
+  ['chlorine monofluoride','ClF'], ['chlorine trifluoride','ClF3'], ['chlorine pentafluoride','ClF5'],
+  ['bromine trifluoride','BrF3'], ['bromine pentafluoride','BrF5'],
+  ['iodine pentafluoride','IF5'], ['iodine heptafluoride','IF7']
+].map(([name,raw,aliases=[]])=>({name,raw,aliases}));
+
+// ORIGINAL ACID AND HYDRATE BANK — retained verbatim from the uploaded file.
+const originalExtras = {
+  "Binary acids": [
+    [
+      "hydrofluoric acid",
+      "HF(aq)"
+    ],
+    [
+      "hydrochloric acid",
+      "HCl(aq)"
+    ],
+    [
+      "hydrobromic acid",
+      "HBr(aq)"
+    ],
+    [
+      "hydroiodic acid",
+      "HI(aq)"
+    ],
+    [
+      "hydrosulfuric acid",
+      "H2S(aq)"
+    ]
+  ],
+  "Oxyacids": [
+    [
+      "nitric acid",
+      "HNO3(aq)"
+    ],
+    [
+      "nitrous acid",
+      "HNO2(aq)"
+    ],
+    [
+      "sulfuric acid",
+      "H2SO4(aq)"
+    ],
+    [
+      "sulfurous acid",
+      "H2SO3(aq)"
+    ],
+    [
+      "phosphoric acid",
+      "H3PO4(aq)"
+    ],
+    [
+      "carbonic acid",
+      "H2CO3(aq)"
+    ],
+    [
+      "hypochlorous acid",
+      "HClO(aq)"
+    ],
+    [
+      "chlorous acid",
+      "HClO2(aq)"
+    ],
+    [
+      "chloric acid",
+      "HClO3(aq)"
+    ],
+    [
+      "perchloric acid",
+      "HClO4(aq)"
+    ],
+    [
+      "acetic acid",
+      "HC2H3O2(aq)"
+    ]
+  ],
+  "Hydrates": [
+    [
+      "copper(II) sulfate pentahydrate",
+      "CuSO4·5H2O"
+    ],
+    [
+      "cobalt(II) chloride hexahydrate",
+      "CoCl2·6H2O"
+    ],
+    [
+      "magnesium sulfate heptahydrate",
+      "MgSO4·7H2O"
+    ],
+    [
+      "sodium carbonate decahydrate",
+      "Na2CO3·10H2O"
+    ],
+    [
+      "calcium sulfate dihydrate",
+      "CaSO4·2H2O"
+    ],
+    [
+      "barium chloride dihydrate",
+      "BaCl2·2H2O"
+    ],
+    [
+      "iron(II) sulfate heptahydrate",
+      "FeSO4·7H2O"
+    ],
+    [
+      "lithium chloride monohydrate",
+      "LiCl·H2O"
+    ]
+  ]
+};
+const categoryNotes = {
+  [CATEGORY.type1]:'Use the fixed metal charge; balance charges and reduce the ratio. Do not use molecular prefixes.',
+  [CATEGORY.type2]:'The Roman numeral gives the charge on one metal ion, not its atom count. Balance the charges.',
+  [CATEGORY.poly1]:'Keep each polyatomic ion intact. Use parentheses only when more than one copy is needed.',
+  [CATEGORY.poly2]:'Check the metal’s Roman numeral and the polyatomic ion’s charge. Reduce the ratio and check parentheses.',
+  [CATEGORY.molecular]:'Prefixes count atoms. Omit mono- on the first element. Do not reduce molecular subscripts.',
+  [CATEGORY.binaryAcids]:'Use hydro- + root + -ic acid for an aqueous binary acid. Include (aq) in the formula.',
+  [CATEGORY.oxyacids]:'-ate becomes -ic acid; -ite becomes -ous acid. Keep hypo-/per-. Include (aq) in the formula.',
+  [CATEGORY.hydrates]:'Name the ionic compound, then a prefix + hydrate. Separate waters with a dot; the water count is a coefficient.',
+  [CATEGORY.ions]:'Check both the atoms and the ion charge. Use a caret for a multi-charge ion, such as ^2- or ^3-.'
+};
+const chemistryBank = {
+  [CATEGORY.type1]:typeIBinary,
+  [CATEGORY.type2]:typeIIBinary,
+  [CATEGORY.poly1]:typeIPolyatomic,
+  [CATEGORY.poly2]:typeIIPolyatomic,
+  [CATEGORY.molecular]:molecularEntries,
+  ...Object.fromEntries(Object.entries(originalExtras).map(([category,entries])=>[category,entries.map(([name,raw])=>({name,raw}))])),
+  [CATEGORY.ions]:polyatomicIons
+};
+// Explicit equivalent acid representations; (aq) remains required.
+Object.assign(chemistryBank[CATEGORY.oxyacids].find(c=>c.name==='acetic acid'),{
+  aliases:['ethanoic acid'], formulaAliases:['CH3COOH(aq)','CH3CO2H(aq)']
+});
+for(const [category,entries] of Object.entries(chemistryBank)){
+  if(MAIN_CATEGORIES.includes(category) && entries.length!==50) throw new Error(`${category}: expected 50 entries, found ${entries.length}`);
+  if(new Set(entries.map(c=>`${c.raw}|${c.charge||0}`)).size!==entries.length) throw new Error(`Duplicate formula in ${category}`);
+}
+if(polyatomicIons.length!==15) throw new Error('Expected 15 standalone polyatomic ions');
+// END EDITABLE CHEMISTRY BANK. Rendering/checking/UI follow separately.
+
+</script>
+<script id="flashcards-app">
+/* ===================== ANSWER CHECKING & DISPLAY ===================== */
+const SUBSCRIPT_DIGITS='₀₁₂₃₄₅₆₇₈₉', SUPERSCRIPT_DIGITS='⁰¹²³⁴⁵⁶⁷⁸⁹';
+function escapeHTML(value){return String(value).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function normalizeName(value){
+  return value.toLowerCase().trim().replace(/\s+/g,' ')
+    .replace(/\s*\(\s*([ivxlcdm]+)\s*\)\s*/g,'($1) ')
+    .replace(/aluminium/g,'aluminum').replace(/sulph/g,'sulf').trim();
+}
+function normalizeFormula(value){
+  let text=value.replace(/\s+/g,'')
+    .replace(/[₀₁₂₃₄₅₆₇₈₉]/g,c=>SUBSCRIPT_DIGITS.indexOf(c))
+    .replace(/([⁰¹²³⁴⁵⁶⁷⁸⁹]*)([⁺⁻])$/,(all,digits,sign)=>'^'+[...digits].map(c=>SUPERSCRIPT_DIGITS.indexOf(c)).join('')+(sign==='⁺'?'+':'-'))
+    .replace(/−/g,'-').replace(/[.⋅•*]/g,'·')
+    .replace(/\^\{(\d*[+-])\}$/,'^$1')
+    .replace(/\^?\((\d*[+-])\)$/,'^$1')
+    .replace(/\^?([+-])(\d+)$/,'^$2$1');
+  // A bare sign is charge ±1. SO42- is not silently interpreted as SO4^2-.
+  if(!/\^\d*[+-]$/.test(text)) text=text.replace(/([+-])$/,'^$1');
+  text=text.replace(/\^1([+-])$/,'^$1')
+    .replace(/^\[([A-Za-z0-9()]+)\](\^\d*[+-])$/,'$1$2')
+    .replace(/·1H2O$/,'·H2O');
+  return text;
+}
+function chargeText(charge){return (Math.abs(charge)===1?'':Math.abs(charge))+(charge>0?'+':'-');}
+function expectedFormulas(c){return [c.raw,...(c.formulaAliases||[])].map(raw=>raw+(c.charge?'^'+chargeText(c.charge):''));}
+function isCorrectAnswer(c,value){
+  if(c.direction==='name') return expectedFormulas(c).some(formula=>normalizeFormula(formula)===normalizeFormula(value));
+  let normalized=normalizeName(value);
+  if(c.category===CATEGORY.ions) normalized=normalized.replace(/ ion$/,'');
+  return [c.name,...(c.aliases||[])].some(name=>normalizeName(name)===normalized);
+}
+function formatFormula(raw,charge=0){
+  let html=raw.split('·').map((part,i)=>{
+    const match=i?part.match(/^(\d+)(.*)$/):null;
+    const coefficient=match?match[1]:'';
+    const formula=match?match[2]:part;
+    return coefficient+escapeHTML(formula).replace(/(\d+)/g,'<sub>$1</sub>').replace('(aq)','<span class="state">(aq)</span>');
   }).join('·');
+  if(charge){
+    const superscript=chargeText(charge).replace('-','−');
+    // Preserve the original stacked charge/subscript treatment for ions.
+    if(/<sub>\d+<\/sub>$/.test(html)) html=html.replace(/<sub>(\d+)<\/sub>$/,`<span class="ion-stack"><sup>${superscript}</sup><sub>$1</sub></span>`);
+    else html+=`<sup>${superscript}</sup>`;
+  }
+  return html;
 }
-const baseDeck = [...ionDeck, ...Object.entries(groups).flatMap(([category, entries]) =>
- entries.map(([name,raw],i)=>({name,raw,formula:formatFormula(raw),category,note:categoryNotes[category],direction:i%2?'formula':'name'})))];
+const baseDeck=Object.entries(chemistryBank).flatMap(([category,entries])=>entries.map(entry=>({
+  ...entry,category,note:categoryNotes[category],id:`${category}|${entry.raw}`,
+  formula:formatFormula(entry.raw,entry.charge||0)
+})));
 
-let deck = [...baseDeck];
-let index = 0;
-let showingAnswer = false;
-let seconds = 120;
-let timerHandle = null;
-
-const card = document.getElementById("card");
-const cardText = document.getElementById("cardText");
-const eyebrow = document.getElementById("eyebrow");
-const counter = document.getElementById("counter");
-const mode = document.getElementById("mode");
-const progress = document.getElementById("progress");
-const timer = document.getElementById("timer");
-const timerBtn = document.getElementById("timerBtn");
-const footerMsg = document.getElementById("footerMsg");
-
-function getPrompt(c){
-  return c.direction === "name" ? c.name : c.formula;
+/* ======================= SESSION & CARD CONTROLS ===================== */
+let deck=[],index=0,showingAnswer=false;
+const session={correct:0,missed:0,streak:0};
+// Keep outcomes across navigation/shuffling to prevent double counting.
+const attemptsByCard=new Map();
+const byId=id=>document.getElementById(id);
+const card=byId('card'),cardText=byId('cardText'),eyebrow=byId('eyebrow');
+const counter=byId('counter'),mode=byId('mode'),progress=byId('progress');
+const footerMsg=byId('footerMsg'),categorySelect=byId('categorySelect');
+const directionSelect=byId('directionSelect');
+const modeButtons=[...document.querySelectorAll('[data-study-mode]')];
+let studyMode='flash';
+const practiceArea=byId('practiceArea'),answerInput=byId('answerInput');
+const checkBtn=byId('checkBtn'),showAnswerBtn=byId('showAnswerBtn'),feedback=byId('feedback');
+const isPractice=()=>studyMode==='practice';
+function currentAttempt(){
+  const c=deck[index],key=c.id+'|'+c.direction;
+  if(!attemptsByCard.has(key)) attemptsByCard.set(key,{attempts:0,resolved:false,revealed:false,input:'',feedback:'',tone:'',outcome:null,formatMode:'normal'});
+  return attemptsByCard.get(key);
 }
-
-function getAnswer(c){
-  return c.direction === "name" ? c.formula : c.name;
+function updateScore(){
+  byId('correctCount').textContent=session.correct;
+  byId('missedCount').textContent=session.missed;
+  byId('streakCount').textContent=session.streak;
 }
-
+function scoreFirstAttempt(state,correct){
+  if(state.outcome) return;
+  state.outcome=correct?'correct':'missed';
+  if(correct){session.correct++;session.streak++;}
+  else{session.missed++;session.streak=0;}
+  updateScore();
+}
+function getPrompt(c){return c.direction==='name'?escapeHTML(c.name):c.formula;}
+function getAnswer(c){return c.direction==='name'?c.formula:escapeHTML(c.name);}
+function inputHelp(c){
+  if(c.direction==='formula') return 'Type the name. Capitalization and extra spaces do not matter; use Roman numerals where needed.';
+  if(c.category===CATEGORY.ions) return 'Include the charge: use ^2- or ²⁻ for a 2− charge, and + or ⁺ for a 1+ charge.';
+  if(c.category===CATEGORY.binaryAcids || c.category===CATEGORY.oxyacids) return 'Use digits or subscripts, and include (aq). Element capitalization matters.';
+  if(c.category===CATEGORY.hydrates) return 'Use a middle dot or period before the waters. Keep the water count before H2O.';
+  return 'Use digits or subscripts. Spaces are ignored; element capitalization and parentheses matter.';
+}
 function renderCard(){
-  const c = deck[index];
-  showingAnswer = false;
-  card.classList.remove("answerState");
-
-  cardText.innerHTML = getPrompt(c);
-  cardText.className = "prompt" + (c.direction === "formula" ? " formula" : "");
-
-  if(c.direction === "name"){
-    eyebrow.textContent = c.category === "Polyatomic ions" ? "Give the formula and charge" : "Give the formula";
-    mode.textContent = "NAME → FORMULA";
-  } else {
-    eyebrow.textContent = c.category === "Polyatomic ions" ? "Name this polyatomic ion" : "Name this compound";
-    mode.textContent = "FORMULA → NAME";
+  const c=deck[index],practice=isPractice();
+  const state=practice?currentAttempt():null;
+  const show=practice?state.resolved:showingAnswer;
+  card.classList.toggle('answerState',show);
+  card.classList.toggle('practice-card',practice);
+  card.setAttribute('role',practice?'group':'button');
+  card.tabIndex=practice?-1:0;
+  card.setAttribute('aria-label',practice?'Practice card. Type your answer below.':'Flashcard. Press Space or Enter to reveal the answer.');
+  cardText.innerHTML=show?getAnswer(c):getPrompt(c);
+  const displayFormula=show?c.direction==='name':c.direction==='formula';
+  cardText.className='prompt'+(displayFormula?' formula':'');
+  if(show) eyebrow.textContent=practice?(state.revealed?'Answer':'Correct answer'):'Answer';
+  else if(c.direction==='name') eyebrow.textContent=c.category===CATEGORY.ions?'Give the formula and charge':'Give the formula';
+  else eyebrow.textContent=c.category===CATEGORY.ions?'Name this polyatomic ion':'Name this compound';
+  byId('categoryLabel').textContent=c.category;
+  byId('cardHint').textContent=practice?(show?'Use Next when you’re ready.':'Type your answer below.'):(show?'Click or press Space to see the prompt again':'Click the card or press Space to reveal');
+  mode.textContent=c.direction==='name'?'NAME → FORMULA':'FORMULA → NAME';
+  counter.textContent=`Card ${index+1} of ${deck.length}`;
+  progress.style.width=`${(index+1)/deck.length*100}%`;
+  practiceArea.hidden=!practice;
+  modeButtons.forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.studyMode===studyMode)));
+  formulaTools.hidden=!practice||c.direction!=='name';
+  byId('modeKeys').innerHTML=practice?'<kbd>Enter</kbd> check answer':'<kbd>Space</kbd> reveal';
+  if(practice){
+    byId('answerLabel').textContent=c.direction==='name'?'Your formula':'Your name';
+    answerInput.classList.toggle('formula-input',c.direction==='name');
+    answerInput.placeholder=c.direction==='name'?'Type the formula here':'Type the compound or ion name here';
+    answerInput.setAttribute('aria-describedby',c.direction==='name'?'inputHelp formatHelp feedback':'inputHelp feedback');
+    answerInput.value=state.input;
+    answerInput.disabled=state.resolved;
+    answerInput.setAttribute('aria-invalid',String(state.attempts>0&&!state.resolved));
+    checkBtn.disabled=state.resolved;
+    showAnswerBtn.hidden=state.attempts<2||state.resolved;
+    byId('inputHelp').textContent=inputHelp(c);
+    feedback.textContent=state.feedback;
+    feedback.dataset.tone=state.tone;
+    if(c.direction==='name') updateFormulaTools();
   }
-
-  counter.textContent = `Card ${index+1} of ${deck.length}`;
-  progress.style.width = `${((index+1)/deck.length)*100}%`;
 }
-
+function resetFace(){showingAnswer=false;renderCard();}
+function focusAnswer(){if(isPractice()&&!currentAttempt().resolved) answerInput.focus({preventScroll:true});}
 function flipCard(){
-  const c = deck[index];
-  showingAnswer = !showingAnswer;
-
-  if(showingAnswer){
-    cardText.innerHTML = getAnswer(c);
-    cardText.className = "prompt" + (c.direction === "name" ? " formula" : "");
-    eyebrow.textContent = "Answer";
-    card.classList.add("answerState");
-  } else {
-    renderCard();
-  }
-
-  card.classList.add("flash");
-  setTimeout(()=>card.classList.remove("flash"),280);
+  if(isPractice()) return;
+  showingAnswer=!showingAnswer;renderCard();
+  card.classList.add('flash');setTimeout(()=>card.classList.remove('flash'),280);
 }
-
-function nextCard(){
-  index = (index + 1) % deck.length;
-  renderCard();
-}
-
-function prevCard(){
-  index = (index - 1 + deck.length) % deck.length;
-  renderCard();
-}
-
+function nextCard(){index=(index+1)%deck.length;resetFace();focusAnswer();}
+function prevCard(){index=(index-1+deck.length)%deck.length;resetFace();focusAnswer();}
 function shuffleDeck(){
-  for(let i=deck.length-1;i>0;i--){
-    const j=Math.floor(Math.random()*(i+1));
-    [deck[i],deck[j]]=[deck[j],deck[i]];
-  }
-
-  deck = deck.map(c => ({
-    ...c,
-    direction: directionSelect.value === "mixed" ? (Math.random() < 0.5 ? "name" : "formula") : directionSelect.value
-  }));
-
-  index = 0;
-  renderCard();
-  footerMsg.textContent = "Shuffled";
-}
-
-function updateTimer(){
-  const m=Math.floor(seconds/60);
-  const s=seconds%60;
-  timer.textContent=`${m}:${String(s).padStart(2,"0")}`;
-}
-
-function toggleTimer(){
-  if(timerHandle){
-    clearInterval(timerHandle);
-    timerHandle=null;
-    timerBtn.textContent="▶ Resume";
-    footerMsg.textContent="Timer paused";
-    return;
-  }
-
-  if(seconds<=0){
-    seconds=120;
-    updateTimer();
-  }
-
-  timerBtn.textContent="⏸ Pause";
-  footerMsg.textContent="Practice round running";
-
-  timerHandle=setInterval(()=>{
-    seconds--;
-    updateTimer();
-
-    if(seconds<=0){
-      clearInterval(timerHandle);
-      timerHandle=null;
-      timerBtn.textContent="↻ Reset 2:00";
-      footerMsg.textContent="Time";
-      timer.classList.add("timeup");
-      setTimeout(()=>timer.classList.remove("timeup"),4000);
-    }
-  },1000);
-}
-
-function resetTimer(){
-  if(timerHandle){
-    clearInterval(timerHandle);
-    timerHandle=null;
-  }
-  seconds=120;
-  updateTimer();
-  timerBtn.textContent="▶ Start 2:00";
-  footerMsg.textContent="Ready";
-}
-
-card.addEventListener("click", flipCard);
-document.getElementById("nextBtn").addEventListener("click", nextCard);
-document.getElementById("prevBtn").addEventListener("click", prevCard);
-document.getElementById("shuffleBtn").addEventListener("click", shuffleDeck);
-
-timerBtn.addEventListener("click", ()=>{
-  if(seconds===0) resetTimer();
-  else toggleTimer();
-});
-
-document.addEventListener("keydown", (e)=>{
-  if(e.ctrlKey || e.metaKey || e.altKey || e.repeat) return;
-  if(e.target.closest('select, input, textarea, button')) return;
-  if(e.key === "Enter" && e.target === card){e.preventDefault();flipCard();return;}
-  if(e.code==="Space"){
-    e.preventDefault();
-    flipCard();
-  } else if(e.code==="ArrowRight"){
-    e.preventDefault();
-    nextCard();
-  } else if(e.code==="ArrowLeft"){
-    e.preventDefault();
-    prevCard();
-  } else if(e.key.toLowerCase()==="r"){
-    shuffleDeck();
-  } else if(e.key.toLowerCase()==="t"){
-    if(seconds===0) resetTimer();
-    else toggleTimer();
-  } else if(e.key.toLowerCase()==="f"){
-    launchFireworks();
-  }
-});
-
-
-
-
-
-
-
-
-const categorySelect=document.getElementById('categorySelect');
-const directionSelect=document.getElementById('directionSelect');
-for(const category of [...new Set(baseDeck.map(c=>c.category))]){
- const option=document.createElement('option');option.value=category;option.textContent=category;categorySelect.appendChild(option);
+  for(let i=deck.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[deck[i],deck[j]]=[deck[j],deck[i]];}
+  const randomDirection=categorySelect.value==='surprise'||directionSelect.value==='mixed';
+  deck=deck.map(c=>({...c,direction:randomDirection?(Math.random()<.5?'name':'formula'):directionSelect.value}));
+  index=0;resetFace();footerMsg.textContent='Shuffled';
 }
 function selectDeck(){
- deck=baseDeck.filter(c=>categorySelect.value==='all'||c.category===categorySelect.value).map(c=>({...c}));
- shuffleDeck();footerMsg.textContent='Ready';
+  const selected=categorySelect.value;
+  directionSelect.disabled=selected==='surprise';
+  directionSelect.title=selected==='surprise'?'Surprise Me chooses a random direction for each card.':'';
+  deck=baseDeck.filter(c=>selected==='all'||selected==='surprise'||c.category===selected).map(c=>({...c}));
+  shuffleDeck();
+  footerMsg.textContent=selected==='surprise'?'Surprise Me • random directions':`${baseDeck.length} practice items • ready`;
+}
+function checkAnswer(event){
+  if(event) event.preventDefault();
+  if(!isPractice()) return;
+  const c=deck[index],state=currentAttempt();
+  if(state.resolved) return;
+  state.input=answerInput.value;
+  if(!state.input.trim()){
+    state.feedback='Type an answer first. Blank answers do not affect your score.';state.tone='';renderCard();focusAnswer();return;
+  }
+  const correct=isCorrectAnswer(c,state.input);
+  scoreFirstAttempt(state,correct);
+  if(correct){
+    state.resolved=true;state.tone='success';
+    state.feedback=state.attempts?'Correct — nice recovery! This card stays in Missed; keep going.':'Correct! First try — keep it going.';
+    renderCard();launchFireworks();byId('nextBtn').focus({preventScroll:true});
+  }else{
+    state.attempts++;
+    state.tone='retry';
+    state.feedback=(state.attempts===1?'Not quite. Try again. ':'Still not quite. Try again, or choose Show Answer when you’re ready. ')+c.note;
+    renderCard();focusAnswer();
+  }
+}
+function revealPracticeAnswer(){
+  if(!isPractice()) return;
+  const state=currentAttempt();
+  if(state.attempts<2||state.resolved) return;
+  state.resolved=true;state.revealed=true;state.tone='';
+  state.feedback='Answer shown. Compare it with your attempt, then use Next to keep practicing.';
+  renderCard();byId('nextBtn').focus({preventScroll:true});
+}
+function newSession(){
+  attemptsByCard.clear();session.correct=0;session.missed=0;session.streak=0;
+  updateScore();resetTimer();shuffleDeck();footerMsg.textContent='New session • scores cleared';focusAnswer();
+}
+for(const [category,entries] of Object.entries(chemistryBank)){
+  const option=document.createElement('option');option.value=category;option.textContent=`${category} (${entries.length})`;categorySelect.appendChild(option);
 }
 categorySelect.addEventListener('change',selectDeck);
 directionSelect.addEventListener('change',selectDeck);
-document.getElementById('fireworksBtn').addEventListener('click',launchFireworks);
+modeButtons.forEach(button=>button.addEventListener('click',()=>{
+  if(studyMode===button.dataset.studyMode) return;
+  studyMode=button.dataset.studyMode;resetFace();focusAnswer();
+}));
+card.addEventListener('click',flipCard);
+byId('nextBtn').addEventListener('click',nextCard);
+byId('prevBtn').addEventListener('click',prevCard);
+byId('shuffleBtn').addEventListener('click',shuffleDeck);
+byId('answerForm').addEventListener('submit',checkAnswer);
+answerInput.addEventListener('input',()=>{if(isPractice()){currentAttempt().input=answerInput.value;answerInput.setAttribute('aria-invalid','false');}});
+showAnswerBtn.addEventListener('click',revealPracticeAnswer);
+byId('resetSessionBtn').addEventListener('click',newSession);
+byId('fireworksBtn').addEventListener('click',launchFireworks);
 
+/* ======================== FORMULA FORMATTING ======================== */
+// A plain input plus Unicode keeps the file portable, selectable, and offline.
+// Only digits and charge signs change style; element symbols remain baseline.
+const formulaTools=byId('formulaTools');
+const formatButtons=[...formulaTools.querySelectorAll('[data-format]')];
+for(let digit=0;digit<=9;digit++){
+  const button=document.createElement('button');button.type='button';
+  button.dataset.insert=String(digit);byId('digitKeys').appendChild(button);
+}
+const formulaInsertButtons=[...formulaTools.querySelectorAll('[data-insert]')];
+function formattedText(value,style){
+  const plain=value.replace(/[₀₁₂₃₄₅₆₇₈₉]/g,c=>SUBSCRIPT_DIGITS.indexOf(c))
+    .replace(/[⁰¹²³⁴⁵⁶⁷⁸⁹]/g,c=>SUPERSCRIPT_DIGITS.indexOf(c))
+    .replace(/⁺/g,'+').replace(/[⁻−]/g,'-');
+  if(style==='subscript') return plain.replace(/[0-9]/g,d=>SUBSCRIPT_DIGITS[d]);
+  if(style==='superscript') return plain.replace(/\^/g,'').replace(/[0-9]/g,d=>SUPERSCRIPT_DIGITS[d]).replace(/\+/g,'⁺').replace(/-/g,'⁻');
+  return plain;
+}
+function canFormatAnswer(){return isPractice()&&deck[index].direction==='name'&&!currentAttempt().resolved;}
+function updateFormulaTools(){
+  const state=currentAttempt(),style=state.formatMode;
+  formatButtons.forEach(button=>{
+    button.setAttribute('aria-pressed',String(button.dataset.format===style));
+    button.disabled=state.resolved;
+  });
+  formulaInsertButtons.forEach(button=>{
+    const char=button.dataset.insert;button.disabled=state.resolved;
+    button.textContent=formattedText(char,style);
+    if(button.textContent==='-') button.textContent='−';
+    if(/^[0-9]$/.test(char)) button.setAttribute('aria-label',`Insert ${style==='normal'?'normal':style} ${char}`);
+    if(char==='+'||char==='-') button.setAttribute('aria-label',`Insert ${style==='superscript'?'superscript ':''}${char==='+'?'plus':'minus'} sign`);
+  });
+  byId('formatStatus').textContent=state.resolved?'Formatting locked — move to the next card to keep practicing.':{
+    normal:'Normal selected · numbers stay on the line.',
+    subscript:'Subscript selected · numbers appear below the line.',
+    superscript:'Superscript selected · numbers and + / − appear above the line.'
+  }[style];
+}
+function insertFormulaText(value){
+  if(!canFormatAnswer()) return;
+  const start=answerInput.selectionStart,end=answerInput.selectionEnd;
+  const available=answerInput.maxLength-answerInput.value.length+(end-start);
+  answerInput.focus({preventScroll:true});
+  answerInput.setRangeText(value.slice(0,Math.max(0,available)),start,end,'end');
+  answerInput.dispatchEvent(new Event('input',{bubbles:true}));
+}
+function chooseFormulaStyle(style){
+  if(!canFormatAnswer()) return;
+  const start=answerInput.selectionStart,end=answerInput.selectionEnd;
+  currentAttempt().formatMode=style;
+  if(start!==end){
+    const replacement=formattedText(answerInput.value.slice(start,end),style);
+    insertFormulaText(replacement);
+    answerInput.setSelectionRange(start,start+replacement.length);
+  }
+  updateFormulaTools();answerInput.focus({preventScroll:true});
+}
+// Preserve the insertion point/selection when clicking the on-screen controls.
+formulaTools.addEventListener('mousedown',event=>{if(event.target.closest('button')) event.preventDefault();});
+formatButtons.forEach(button=>button.addEventListener('click',()=>chooseFormulaStyle(button.dataset.format)));
+formulaInsertButtons.forEach(button=>button.addEventListener('click',()=>{
+  if(canFormatAnswer()) insertFormulaText(formattedText(button.dataset.insert,currentAttempt().formatMode));
+}));
+answerInput.addEventListener('beforeinput',event=>{
+  if(!canFormatAnswer()||event.isComposing||event.inputType!=='insertText'||!event.data||!event.cancelable) return;
+  if(currentAttempt().formatMode==='normal') return;
+  const transformed=formattedText(event.data,currentAttempt().formatMode);
+  if(transformed!==event.data){event.preventDefault();insertFormulaText(transformed);}
+});
+
+/* ====================== ORIGINAL TWO-MINUTE TIMER ==================== */
+// A deadline keeps the timer accurate when a browser tab runs in the background.
+let seconds=120,remainingMs=120000,timerHandle=null,timerDeadline=0;
+const timer=byId('timer'),timerBtn=byId('timerBtn');
+function updateTimer(){timer.textContent=`${Math.floor(seconds/60)}:${String(seconds%60).padStart(2,'0')}`;}
+function timerTick(){
+  remainingMs=Math.max(0,timerDeadline-Date.now());seconds=Math.ceil(remainingMs/1000);updateTimer();
+  if(seconds===0){clearInterval(timerHandle);timerHandle=null;timerBtn.textContent='↻ Reset 2:00';footerMsg.textContent='Time • keep practicing or reset the timer';timer.classList.add('timeup');setTimeout(()=>timer.classList.remove('timeup'),4000);}
+}
+function toggleTimer(){
+  if(timerHandle){
+    remainingMs=Math.max(0,timerDeadline-Date.now());clearInterval(timerHandle);timerHandle=null;
+    seconds=Math.ceil(remainingMs/1000);updateTimer();
+    timerBtn.textContent=seconds?'▶ Resume':'↻ Reset 2:00';footerMsg.textContent='Timer paused';return;
+  }
+  if(seconds<=0){resetTimer();return;}
+  timer.classList.remove('timeup');timerDeadline=Date.now()+remainingMs;
+  timerBtn.textContent='⏸ Pause';footerMsg.textContent='Practice round running';timerHandle=setInterval(timerTick,200);
+}
+function resetTimer(){
+  clearInterval(timerHandle);timerHandle=null;seconds=120;remainingMs=120000;
+  updateTimer();timer.classList.remove('timeup');timerBtn.textContent='▶ Start 2:00';footerMsg.textContent='Ready';
+}
+timerBtn.addEventListener('click',toggleTimer);
+document.addEventListener('visibilitychange',()=>{if(timerHandle) timerTick();});
+
+/* ============================= KEYBOARD ============================== */
+// Native controls keep their own keys; typing never flips/skips a card.
+document.addEventListener('keydown',event=>{
+  if(event.ctrlKey||event.metaKey||event.altKey||event.repeat||event.isComposing) return;
+  if(event.target.closest('select,input,textarea,button,[contenteditable="true"],summary')) return;
+  if(event.key==='Enter'&&event.target===card){event.preventDefault();flipCard();return;}
+  if(event.code==='Space'){if(!isPractice()){event.preventDefault();flipCard();}}
+  else if(event.code==='ArrowRight'){event.preventDefault();nextCard();}
+  else if(event.code==='ArrowLeft'){event.preventDefault();prevCard();}
+  else if(event.key.toLowerCase()==='r'){shuffleDeck();}
+  else if(event.key.toLowerCase()==='t'){toggleTimer();}
+  else if(event.key.toLowerCase()==='f'){launchFireworks();}
+});
+
+/* ====================== ORIGINAL FIREWORKS ====================== */
 const canvas=document.getElementById('fireworks');
 const ctx=canvas.getContext('2d');
 const fireworkColors=['#a855f7','#c084fc','#9333ea','#d8b4fe','#ff7900','#ff9f1c','#ffb45e','#f97316'];
@@ -682,6 +1220,7 @@ function launchFireworks(){
  if(!fireworkFrame){lastFrame=performance.now();fireworkFrame=requestAnimationFrame(animateFireworks);}
  footerMsg.textContent='Celebrate! 🎆';
 }
+
 selectDeck();
 </script>
 </body>
